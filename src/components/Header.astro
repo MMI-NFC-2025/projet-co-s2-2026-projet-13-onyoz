@@ -10,64 +10,75 @@ import Logo from "../assets/icons/logo_blanc.svg";
         </div>
         <div class="p-5">
             <button
-                class={`group *:ease relative z-20 flex h-4 w-8 flex-col justify-between *:h-0.5 *:w-full *:bg-white *:transition-all *:duration-300 lg:hidden`}
+                class={`group *:ease relative z-20 flex h-9 w-12 flex-col justify-between *:h-[6px]  *:w-full *:bg-white *:transition-all *:duration-300 lg:hidden`}
                 id="menu-btn"
                 aria-label="menu"
                 aria-expanded="false"
                 aria-controls="mainNav"
             >
                 <span
-                    class="group-aria-expanded:translate-y-[7px] group-aria-expanded:rotate-45 group-aria-expanded:bg-white"
+                    class="group-aria-expanded:translate-y-[14.8px] rounded-2xl group-aria-expanded:rotate-45 group-aria-expanded:bg-white"
                     aria-hidden="true"></span>
                 <span
-                    class="group-aria-expanded:hidden group-aria-expanded:bg-white"
+                    class="group-aria-expanded:hidden rounded-2xl group-aria-expanded:bg-white"
                     aria-hidden="true"></span>
                 <span
-                    class="group-aria-expanded:-translate-y-[7px] group-aria-expanded:-rotate-45 group-aria-expanded:bg-white"
+                    class="group-aria-expanded:-translate-y-[14.8px] rounded-2xl group-aria-expanded:-rotate-45 group-aria-expanded:bg-white"
                     aria-hidden="true"></span>
             </button>
             <nav
                 id="menu"
-                class={`visible fixed inset-0 z-10 text-white  group opacity-100 transition-all duration-300 ease-in-out before:fixed before:inset-0 before:z-9 before:translate-y-0 before:bg-rouge before:transition aria-hidden:before:-translate-y-full max-lg:space-y-12 max-lg:p-10 max-lg:aria-hidden:invisible max-lg:aria-hidden:opacity-0 lg:relative lg:flex lg:flex-1 lg:items-center lg:justify-between lg:bg-transparent lg:text-sm lg:font-bold lg:tracking-wide lg:opacity-100`}
+                class={`visible fixed inset-0 z-10 text-white  group opacity-100 transition-all duration-300 ease-in-out before:fixed before:inset-0 before:z-9 before:translate-y-0 before:bg-rouge before:transition aria-hidden:before:-translate-y-full max-lg:space-y-12 max-lg:p-10 max-lg:aria-hidden:invisible max-lg:aria-hidden:opacity-0 lg:relative lg:flex lg:flex-1 lg:items-center lg:justify-between lg:bg-transparent lg:text-base lg:font-bold lg:tracking-wide lg:opacity-100 `}
                 aria-hidden="true"
             >
                 <ul
-                    class="relative z-11 *:transition *:ease-in-out max-lg:mt-24 max-lg:space-y-4 max-lg:text-2xl *:max-lg:translate-y-0 *:max-lg:opacity-100 *:max-lg:group-aria-hidden:-translate-y-6 *:max-lg:group-aria-hidden:opacity-0 lg:flex lg:gap-6"
+                    class="relative z-11 *:transition *:ease-in-out max-lg:mt-24 max-lg:space-y-4 max-lg:text-2xl *:max-lg:translate-y-0 *:max-lg:opacity-100 *:max-lg:group-aria-hidden:-translate-y-6 *:max-lg:group-aria-hidden:opacity-0 lg:flex lg:gap-2"
                 >
-                    <li class="delay-50">
+                    <li
+                        class="delay-50 font-poppins font-light flex justify-center max-lg:ring-2 max-lg:ring-white rounded-3xl p-2.5 mx-8 max-lg:my-8"
+                    >
                         <a href="/">Accueil</a>
                     </li>
-                    <li class="delay-100">
-                        <a href="/">A propos d’Onyoz</a>
+                    <li
+                        class="delay-100 font-poppins font-light flex justify-center max-lg:ring-2 max-lg:ring-white rounded-3xl p-2.5 mx-8 max-lg:my-8"
+                    >
+                        <a href="/"> A propos d’Onyoz</a>
                     </li>
-                    <li class="delay-150">
+
+                    <li
+                        class="delay-150 font-poppins font-light flex justify-center max-lg:ring-2 max-lg:ring-white rounded-3xl p-2.5 mx-8 max-lg:my-8"
+                    >
                         <a href="/">Carte</a>
                     </li>
-                    <li class="delay-200">
+                    <li
+                        class="delay-200 font-poppins font-light flex justify-center max-lg:ring-2 max-lg:ring-white rounded-3xl p-2.5 mx-8 max-lg:my-8"
+                    >
                         <a href="/">Contact</a>
                     </li>
-                    <li class="delay-250">
+                    <li
+                        class="delay-250 font-poppins font-light flex justify-center max-lg:ring-2 max-lg:ring-white rounded-3xl p-2.5 mx-8 max-lg:my-8"
+                    >
                         <a href="/">Se connecter</a>
                     </li>
                 </ul>
             </nav>
         </div>
     </div>
-    <script>
-        const toggle = document.querySelector("#menu-btn");
-        const nav = document.querySelector("#menu");
-        const page = document.body;
-
-        if (toggle && nav) {
-            toggle.addEventListener("click", () => {
-                const isOpen = toggle.ariaExpanded === "true";
-                const isClosed = !isOpen;
-
-                toggle.ariaExpanded = String(isClosed);
-                nav.ariaHidden = String(isOpen);
-                nav.classList.toggle("max-lg:!block", isClosed);
-                page.classList.toggle("noscroll", isClosed);
-            });
-        }
-    </script>
 </header>
+<script>
+    const toggle = document.querySelector("#menu-btn");
+    const nav = document.querySelector("#menu");
+    const page = document.body;
+
+    if (toggle && nav) {
+        toggle.addEventListener("click", () => {
+            const isOpen = toggle.ariaExpanded === "true";
+            const isClosed = !isOpen;
+
+            toggle.ariaExpanded = String(isClosed);
+            nav.ariaHidden = String(isOpen);
+            nav.classList.toggle("max-lg:!block", isClosed);
+            page.classList.toggle("noscroll", isClosed);
+        });
+    }
+</script>
