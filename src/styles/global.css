@@ -1,12 +1,16 @@
 @import "tailwindcss";
+@import url("https://fonts.googleapis.com/css2?family=Kodchasan:wght@400;700&family=Poppins:wght@400;700&display=swap");
 
 @theme {
     --color-rouge: #88272a;
     /* #1d096b */
     --color-vert: #85ae34;
+    --color-blanc: #ffffff;
     /* #feaa9b */
 
     --font-sans: "Inter Variable", sans-serif;
+    --font-kodchasan: "Kodchasan", sans-serif;
+    --font-poppins: "Poppins", sans-serif;
 
     --my-grid: repeat(12, minmax(0, 88px));
 }

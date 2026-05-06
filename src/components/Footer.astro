@@ -1,0 +1,33 @@
+---
+import logoFooter from "../assets/icons/logo_footer.svg";
+import logoInstagram from "../assets/icons/logo-Instagram.svg";
+import logoFacebook from "../assets/icons/facebook.svg";
+import logoTiktok from "../assets/icons/logo TikTok.svg";
+import logoYoutube from "../assets/icons/logo-Youtube.svg";
+---
+
+<footer class="bg-rouge text-blanc px-8 py-10">
+
+  <img src={logoFooter.src} alt="Onyoz" class="h-16 mb-8" />
+
+  <p class="font-bold mb-3">INFOS</p>
+  <ul class="flex flex-col gap-2 mb-8">
+    <li><a href="/mentions-legales">Mentions Légales</a></li>
+    <li><a href="/conditions-utilisation">Conditions D'utilisation</a></li>
+    <li><a href="/contact">Contact</a></li>
+    <li><a href="/a-propos">À Propos</a></li>
+  </ul>
+
+  <p class="font-bold mb-3">SUIVEZ-NOUS</p>
+  <div class="flex gap-6 mb-8">
+    <a href="#"><img src={logoInstagram.src} alt="Instagram" class="h-8" /></a>
+    <a href="#"><img src={logoFacebook.src} alt="Facebook" class="h-8" /></a>
+    <a href="#"><img src={logoTiktok.src} alt="TikTok" class="h-8" /></a>
+    <a href="#"><img src={logoYoutube.src} alt="YouTube" class="h-8" /></a>
+  </div>
+
+  <p class="text-xs text-center">
+    Ce site a été réalisé dans le cadre d'un projet universitaire, il est donc fictif. Ne prenez pas les informations de ce site pour vraie.
+  </p>
+
+</footer>
