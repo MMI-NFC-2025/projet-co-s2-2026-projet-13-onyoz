@@ -14,3 +14,12 @@
 
     --my-grid: repeat(12, minmax(0, 88px));
 }
+
+.grid-custom {
+    display: grid;
+    column-gap: 20px;
+    justify-content: center;
+    position: absolute;
+    top: 0;
+    grid-template-columns: var(--my-grid);
+}

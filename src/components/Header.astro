@@ -4,12 +4,12 @@ import Logo from "../assets/icons/logo_blanc.svg";
 import Txtlogo from "../assets/icons/logo_footer.svg";
 ---
 
-<header class="bg-rouge">
+<header class="bg-rouge z-50 sticky top-0">
     <div class="flex items-center justify-between lg:mx-10">
-        <div class="p-2 px-5">
+        <a href="/" class="p-2 px-5">
             <Logo class="lg:hidden" />
             <Txtlogo class="hidden lg:block w-30" />
-        </div>
+        </a>
         <div class="p-5">
             <button
                 class={`group *:ease relative z-20 flex h-9 w-12 flex-col justify-between *:h-[6px]  *:w-full *:bg-white *:transition-all *:duration-300 lg:hidden`}
@@ -39,28 +39,28 @@ import Txtlogo from "../assets/icons/logo_footer.svg";
                     <li
                         class="delay-50 font-poppins font-light flex justify-center max-lg:ring-2 max-lg:ring-white rounded-3xl p-2.5 mx-8 max-lg:my-8"
                     >
-                        <a href="/">Accueil</a>
+                        <a href="accueil">Accueil</a>
                     </li>
                     <li
                         class="delay-100 font-poppins font-light flex justify-center max-lg:ring-2 max-lg:ring-white rounded-3xl p-2.5 mx-8 max-lg:my-8"
                     >
-                        <a href="/"> A propos d’Onyoz</a>
+                        <a href="../pages/a-propos.astro"> A propos d’Onyoz</a>
                     </li>
 
                     <li
                         class="delay-150 font-poppins font-light flex justify-center max-lg:ring-2 max-lg:ring-white rounded-3xl p-2.5 mx-8 max-lg:my-8"
                     >
-                        <a href="/">Carte</a>
+                        <a href="../pages/carte.astro">Carte</a>
                     </li>
                     <li
                         class="delay-200 font-poppins font-light flex justify-center max-lg:ring-2 max-lg:ring-white rounded-3xl p-2.5 mx-8 max-lg:my-8"
                     >
-                        <a href="/">Contact</a>
+                        <a href="../pages/contact.astro">Contact</a>
                     </li>
                     <li
                         class="delay-250 font-poppins font-light flex justify-center max-lg:ring-2 max-lg:ring-white rounded-3xl p-2.5 mx-8 max-lg:my-8"
                     >
-                        <a href="/">Se connecter</a>
+                        <a href="../pages/se-connecter.astro">Se connecter</a>
                     </li>
                 </ul>
             </nav>
