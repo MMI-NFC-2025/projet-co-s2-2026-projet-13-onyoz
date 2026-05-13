@@ -10,6 +10,6 @@
   },
   "dependencies": {
     "astro": "^5.17.3",
-    "pocketbase": "^0.26.8"
+    "pocketbase": "^0.26.9"
   }
 }

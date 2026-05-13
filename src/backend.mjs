@@ -1,76 +1,160 @@
-import PocketBase from "pocketbase";
-const pb = new PocketBase('http://127.0.0.1:8090');
-export { pb };
+import PocketBase from 'pocketbase';
+const pb = new PocketBase('http://pbonyoz.lucie-garcia.fr');
 
-/*coté avis*/
-export async function IdAvis(id) {
-    const test = await pb.collection("avis").getOne(id);
-    return test;
-}
-export async function TitreAvis(titre_avis) {
-    const test = await pb.collection("avis").getOne(titre_avis);
-    return test;
-}
-export async function ContenuAvis(contenu_avis) {
-    const test = await pb.collection("avis").getOne(contenu_avis);
-    return test;
-}
-export async function NoteAvis(note) {
-    const test = await pb.collection("avis").getOne(note);
-    return test;
-}
-export async function IdRestoAvis(avis_restaurant) {
-    const test = await pb.collection("avis").getOne(avis_restaurant);
-    return test;
-}
-/*export async function CreatedAvis(created) {
-    const test = await pb.collection("avis").getOne(created);
-    return test;
-}*/
+/* user */
 
-/*coté restaurant*/
-export async function FavorisRestaurant(id, valeur) {
-    try {
-        const record = await pb.collection("restaurants").update(id, { favoris: valeur });
-        return { success: true, record };
-    } catch (error) {
-        return { success: false, message: error.message };
-    }
+export async function addNewUser(newUser) {
+    const record = await pb.collection('users').create(newUser);
+    return record;
 }
-export async function IdRestaurant(id) {
-    const test = await pb.collection("restaurants").getOne(id);
-    return test;
-}
-export async function NomRestaurant(nom_restaurant) {
-    const test = await pb.collection("restaurants").getOne(nom_restaurant);
-    return test;
-}
-export async function LocalisationRestaurant(localisation_restaurant) {
-    const test = await pb.collection("restaurants").getOne(localisation_restaurant);
-    return test;
-}
-export async function OpenRestaurant(horaires_ouvertures) {
-    const test = await pb.collection("restaurants").getOne(horaires_ouvertures);
-    return test;
-}
-export async function CloseRestaurant(horaires_fermetures) {
-    const test = await pb.collection("restaurants").getOne(horaires_fermetures);
-    return test;
-}
-export async function PrixRestaurant(prix_moyen) {
-    const test = await pb.collection("restaurants").getFullList(prix_moyen);
-    return test;
-}
-/*manque halal et doit vérifier si fullList ou non*/
-export async function IdAvisRestaurant(restaurant_avis) {
-    const test = await pb.collection("restaurants").getFullList(restaurant_avis);
-    return test;
-}
-/*export async function CreatedRestaurant(created) {
-    const test = await pb.collection("restaurants").getOne(created);
-    return test;
-}*/
 
+/* restaurant */
 
+export async function getRestaurantById(id) {
+    const record = await pb.collection('restaurants').getOne(id);
+    return record;
+}
 
-/*coté user*/
+export async function getNomsRestaurants() {
+    const records = await pb.collection('restaurants').getFullList({
+        fields: 'nom_restaurants'
+    });
+    return records;
+}
+
+export async function getImagesPrincipales() {
+    const records = await pb.collection('restaurants').getFullList({
+        fields: 'nom_restaurants, images_principale'
+    });
+    return records;
+}
+
+export async function getImagesGalerie() {
+    const records = await pb.collection('restaurants').getFullList({
+        fields: 'nom_restaurants, images'
+    });
+    return records;
+}
+
+export async function getRestaurantsHalal() {
+    const records = await pb.collection('restaurants').getFullList({
+        fields: 'nom_restaurants, halal'
+    });
+    return records;
+}
+
+export async function getRestaurantsVege() {
+    const records = await pb.collection('restaurants').getFullList({
+        fields: 'nom_restaurants, vege'
+    });
+    return records;
+}
+
+export async function getRestaurantsGlutten() {
+    const records = await pb.collection('restaurants').getFullList({
+        fields: 'nom_restaurants, glutten'
+    });
+    return records;
+}
+
+export async function getRestaurantsFavoris() {
+    const records = await pb.collection('restaurants').getFullList({
+        fields: 'nom_restaurants, favoris'
+    });
+    return records;
+}
+
+export async function getHorairesOuvertureById(id) {
+    const record = await pb.collection('restaurants').getOne(id, {
+        fields: 'nom_restaurants, horaires_ouvertures'
+    });
+    return record;
+}
+
+export async function getHorairesFermetureById(id) {
+    const record = await pb.collection('restaurants').getOne(id, {
+        fields: 'nom_restaurants, horaires_fermetures'
+    });
+    return record;
+}
+
+export async function getPrixMoyenById(id) {
+    const record = await pb.collection('restaurants').getOne(id, {
+        fields: 'nom_restaurants, prix_moyen'
+    });
+    return record;
+}
+
+/*fonction localisation ia*/
+export async function getRestaurantsProches(lat, lon, distanceKm = 5) {
+    const records = await pb.collection('restaurants').getFullList();
+    const restaurantsProches = records.filter(resto => {
+
+        // On accède directement aux propriétés lon et lat de l'objet
+        const restoLon = resto.localisation.lon;
+        const restoLat = resto.localisation.lat;
+
+        const R = 6371;
+        const dLat = (restoLat - lat) * Math.PI / 180;
+        const dLon = (restoLon - lon) * Math.PI / 180;
+        const a =
+            Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+            Math.cos(lat * Math.PI / 180) * Math.cos(restoLat * Math.PI / 180) *
+            Math.sin(dLon / 2) * Math.sin(dLon / 2);
+        const distance = R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        return distance <= distanceKm;
+    });
+    return restaurantsProches;
+}
+
+/*filtre*/
+export async function getRestaurantsPrixCroissant() {
+    const records = await pb.collection('restaurants').getFullList({
+        sort: 'prix_moyen'
+    });
+    return records;
+}
+
+export async function getRestaurantsPrixDecroissant() {
+    const records = await pb.collection('restaurants').getFullList({
+        sort: '-prix_moyen'
+    });
+    return records;
+}
+
+export async function getRestaurantsPrixMax(prixMax) {
+    const records = await pb.collection('restaurants').getFullList({
+        filter: `prix_moyen <= ${prixMax}`,
+        sort: 'prix_moyen'
+    });
+    return records;
+}
+
+export async function getRestaurantsPrixMin(prixMin) {
+    const records = await pb.collection('restaurants').getFullList({
+        filter: `prix_moyen >= ${prixMin}`,
+        sort: 'prix_moyen'
+    });
+    return records;
+}
+
+/* avis */
+
+export async function getNomsAvis() {
+    const records = await pb.collection('avis').getFullList({
+        fields: 'titre_avis'
+    });
+    return records;
+}
+
+export async function getAvisByRestaurantId(restaurantId) {
+    const records = await pb.collection('avis').getFullList({
+        filter: `restaurants_avis = "${restaurantId}"`
+    });
+    return records;
+}
+
+export async function getAvisById(id) {
+    const record = await pb.collection('avis').getOne(id);
+    return record;
+}
