@@ -6,16 +6,11 @@ import NotreMethode from "../components/landing_page/NotreMethode.astro";
 import OnyozTeam from "../components/landing_page/OnyozTeam.astro";
 ---
 
-<Layout>
-    <!-- ===== HERO ===== -->
-    <Hero />
-
-    <!-- ===== QUESQUE C'EST ONYOZ ===== -->
-    <QueSqueOnyoz />
-
-    <!-- ===== NOTRE MÉTHODE ===== -->
-    <NotreMethode />
-
-    <!-- ===== LA ONYOZ' TEAM ===== -->
-    <OnyozTeam />
+<Layout title="Accueil">
+    <main class="landing-page">
+        <Hero />
+        <QueSqueOnyoz />
+        <NotreMethode />
+        <OnyozTeam />
+    </main>
 </Layout>

@@ -14,36 +14,3 @@ import notremethodeMobile from "../../assets/landing_page/notremethode.avif";
         <img src={notremethodeMobile.src} alt="Notre méthode" />
     </div>
 </section>
-
-<style>
-.methode-section {
-    padding: 5rem 1.5rem;
-    background-color: var(--color-beige);
-}
-
-.methode-desktop {
-    display: none;
-}
-
-.methode-desktop img {
-    width: 100%;
-    max-width: 48rem;
-    object-fit: contain;
-    margin: 0 auto;
-    display: block;
-    filter: drop-shadow(0 20px 30px rgba(0, 0, 0, 0.2));
-}
-
-.methode-mobile img {
-    width: 100%;
-    max-width: 24rem;
-    object-fit: contain;
-    margin: 0 auto;
-    display: block;
-}
-
-@media (min-width: 1024px) {
-    .methode-desktop { display: flex; justify-content: center; }
-    .methode-mobile { display: none; }
-}
-</style>

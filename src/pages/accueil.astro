@@ -1,7 +1,16 @@
 ---
-import Layout from '../layouts/Layout.astro';
+import Layout from "../layouts/Layout.astro";
+import Hero from "../components/Hero.astro";
+import QueSqueOnyoz from "../components/landing_page/QueSqueOnyoz.astro";
+import NotreMethode from "../components/landing_page/NotreMethode.astro";
+import OnyozTeam from "../components/landing_page/OnyozTeam.astro";
 ---
 
-<Layout>
-    <p>Accueil</p>
+<Layout title="Accueil">
+    <main class="landing-page">
+        <Hero />
+        <QueSqueOnyoz />
+        <NotreMethode />
+        <OnyozTeam />
+    </main>
 </Layout>
