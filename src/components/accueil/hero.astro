@@ -1,0 +1,50 @@
+---
+import { Image } from 'astro:assets';
+import image from '../../assets/images/fond.avif';
+---
+
+<section aria-labelledby="hero-titre">
+  <div class="relative w-full h-72 overflow-hidden">
+
+    <!-- Image décorative : alt vide — RGAA 1.2 -->
+    <Image
+      src={image}
+      alt=""
+      aria-hidden="true"
+      class="absolute inset-0 w-full h-full object-cover opacity-80"
+    />
+    <div class="absolute inset-0 bg-noir/30" aria-hidden="true"></div>
+
+    <div class="relative z-10 flex flex-col items-center justify-center h-full gap-5 px-6">
+
+      <p id="hero-titre" class="text-blanc text-center text-lg font-semibold leading-snug drop-shadow">
+        On épluche les bons plans<br />pour vous !
+      </p>
+
+      <!-- Lien avec intitulé explicite — RGAA 6.1 -->
+      <a
+        href="/carte"
+        class="flex items-center gap-2 bg-vert text-blanc font-semibold px-6 py-3 rounded-full shadow-md hover:brightness-110 focus:outline-none focus:ring-2 focus:ring-blanc focus:ring-offset-2 focus:ring-offset-bordeaux transition"
+      >
+        <!-- Icône décorative — RGAA 1.2 -->
+        <span aria-hidden="true">→</span>
+        Accéder à la carte
+      </a>
+
+      <!-- Champ de recherche avec label visible masqué — RGAA 11.1 -->
+      <div role="search" class="flex items-center bg-blanc/90 rounded-full px-4 py-2 w-full max-w-sm shadow">
+        <label for="champ-recherche" class="sr-only">
+          Rechercher un restaurant
+        </label>
+        <input
+          id="champ-recherche"
+          type="search"
+          placeholder="Rechercher un restaurant..."
+          autocomplete="off"
+          class="bg-transparent outline-none text-sm text-gris w-full placeholder:text-gris focus:outline-none"
+        />
+      </div>
+
+    </div>
+  </div>
+</section>

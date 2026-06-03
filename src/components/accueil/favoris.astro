@@ -1,0 +1,116 @@
+---
+import { getImagesPrincipales, getRestaurantById, getRestaurantsFavoris } from '../../backend.mjs';
+
+const BASE = 'http://pbonyoz.lucie-garcia.fr/api/files/pbc_1567773776';
+
+const favorisIds = await getRestaurantsFavoris();
+const ids = favorisIds.filter(r => r.favoris).map(r => r.id);
+const favoris = await Promise.all(ids.map(id => getRestaurantById(id)));
+---
+
+<section aria-labelledby="titre-favoris" class="px-4 py-6">
+  <h2 id="titre-favoris" class="text-xl font-bold text-noir mb-4">
+    Vos favoris
+  </h2>
+
+  <!-- RGAA 9.3 – liste sémantique -->
+  <ul class="grid grid-cols-2 gap-3 list-none p-0 m-0" role="list">
+    {favoris.map((resto) => (
+      <li>
+        <article
+          class="bg-bordeaux rounded-xl overflow-hidden shadow text-blanc"
+          aria-label={`Restaurant ${resto.nom_restaurants}, favori`}
+        >
+          <div class="relative">
+            <!-- RGAA 1.1 – alt descriptif -->
+            <img
+              src={`${BASE}/${resto.id}/${resto.images_principale}`}
+              alt={`Photo du restaurant ${resto.nom_restaurants}`}
+              class="w-full h-24 object-cover"
+              loading="lazy"
+              decoding="async"
+            />
+
+            <!-- RGAA 7 – bouton accessible au clavier avec aria-label et aria-pressed -->
+            <button
+              class="absolute top-2 right-2 focus:outline-2 focus:outline-blanc focus:outline-offset-1 rounded"
+              aria-label={`Retirer ${resto.nom_restaurants} des favoris`}
+              aria-pressed="true"
+            >
+              <!-- Icône décorative (RGAA 1.2) -->
+              <svg
+                aria-hidden="true"
+                focusable="false"
+                class="w-5 h-5 fill-or"
+                viewBox="0 0 24 24"
+              >
+                <path d="M12 .587l3.668 7.431 8.2 1.192-5.934 5.783
+                  1.4 8.164L12 18.896l-7.334 3.861
+                  1.4-8.164L.132 9.21l8.2-1.192z" />
+              </svg>
+            </button>
+          </div>
+
+          <div class="p-2">
+            <!-- RGAA 9.1 – h3 sous h2 -->
+            <h3 class="font-semibold text-sm">{resto.nom_restaurants}</h3>
+            <p class="text-xs text-or mb-1">
+              <!-- RGAA 3 – info pas uniquement par la couleur : on ajoute le symbole € -->
+              Prix moyen : {resto.prix_moyen};
+            </p>
+
+            <!-- RGAA 3 – les tags sont du texte, pas seulement des icônes -->
+            <ul
+              class="flex gap-1 mb-1 list-none p-0 m-0"
+              aria-label="Régimes alimentaires"
+              role="list"
+            >
+              {resto.vege && (
+                <li>
+                  <span
+                    class="bg-vert text-blanc text-xs rounded-full px-2 py-0.5"
+                    title="Végétarien"
+                  >
+                    <span aria-hidden="true">🌿</span>
+                    <span class="sr-only">Végétarien</span>
+                  </span>
+                </li>
+              )}
+              {resto.halal && (
+                <li>
+                  <span
+                    class="bg-vert text-blanc text-xs rounded-full px-2 py-0.5"
+                    title="Halal"
+                  >
+                    <span aria-hidden="true">☪</span>
+                    <span class="sr-only">Halal</span>
+                  </span>
+                </li>
+              )}
+              {resto.glutten && (
+                <li>
+                  <span
+                    class="bg-vert text-blanc text-xs rounded-full px-2 py-0.5"
+                    title="Sans gluten"
+                  >
+                    <span aria-hidden="true">🌾</span>
+                    <span class="sr-only">Sans gluten</span>
+                  </span>
+                </li>
+              )}
+            </ul>
+
+            <p class="text-xs text-blanc/80 leading-tight">
+              <span class="sr-only">Horaires d'ouverture :</span>
+              <span aria-hidden="true">Horaires :</span>
+              {/* RGAA 11 – horaire lisible pour les lecteurs d'écran */}
+              <time>{resto.horaires_ouvertures}h</time>
+              {' – '}
+              <time>{resto.horaires_fermetures}h</time>
+            </p>
+          </div>
+        </article>
+      </li>
+    ))}
+  </ul>
+</section>

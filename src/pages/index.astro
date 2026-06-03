@@ -1,11 +1,39 @@
 ---
-import Welcome from '../components/Welcome.astro';
-import Layout from '../layouts/Layout.astro';
-
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
+import Header from '../components/header.astro';
+import Footer from '../components/footer.astro';
+import Hero from '../components/accueil/hero.astro';
+import Offres from '../components/accueil/offres.astro';
+import Favoris from '../components/accueil/favoris.astro';
+import Filtres from '../components/accueil/filtres.astro';
 ---
 
-<Layout>
-	<Welcome />
-</Layout>
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Onyoz – On épluche les bons plans pour vous !</title>
+    <link rel="preconnect" href="[fonts.googleapis.com](https://fonts.googleapis.com)" />
+    <link
+      href="[fonts.googleapis.com](https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Kodchasan:wght@400;700&display=swap)"
+      rel="stylesheet"
+    />
+  </head>
+  <body class="bg-beige font-poppins text-noir">
+    <!-- Lien d'évitement — RGAA 12.7 -->
+    <a
+      href="#contenu-principal"
+      class="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:z-50 focus:bg-bordeaux focus:text-blanc focus:px-4 focus:py-2 focus:rounded-full focus:outline-none"
+    >
+      Aller au contenu principal
+    </a>
+    <Header />
+    <main id="contenu-principal">
+      <Hero />
+      <Offres />
+      <Favoris />
+      <Filtres />
+    </main>
+    <Footer />
+  </body>
+</html>

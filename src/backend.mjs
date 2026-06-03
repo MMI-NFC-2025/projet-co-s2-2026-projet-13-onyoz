@@ -1,5 +1,6 @@
 import PocketBase from 'pocketbase';
 const pb = new PocketBase('http://pbonyoz.lucie-garcia.fr');
+pb.autoCancellation(false);
 
 /* user */
 
@@ -59,7 +60,7 @@ export async function getRestaurantsGlutten() {
 
 export async function getRestaurantsFavoris() {
     const records = await pb.collection('restaurants').getFullList({
-        fields: 'nom_restaurants, favoris'
+        fields: 'id,nom_restaurants, favoris'
     });
     return records;
 }
