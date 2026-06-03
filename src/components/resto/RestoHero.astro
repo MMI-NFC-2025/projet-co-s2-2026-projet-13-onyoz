@@ -1,0 +1,10 @@
+---
+const { resto } = Astro.props;
+const PB_URL = "http://pbonyoz.lucie-garcia.fr";
+const imgUrl = `${PB_URL}/api/files/restaurants/${resto.id}/${resto.images_principale}`;
+---
+<div class="relative">
+  <img src={imgUrl} alt={resto.nom_restaurants} class="w-full h-52 object-cover" />
+  <button onclick="history.back()" class="absolute left-4 top-4 bg-[#98272b]/80 text-white rounded-full w-9 h-9 flex items-center justify-center">
+  </button>
+</div>

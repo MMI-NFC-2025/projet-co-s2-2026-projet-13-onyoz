@@ -1,0 +1,15 @@
+---
+const { resto } = Astro.props;
+---
+<section>
+  <h1 class="text-2xl font-bold tracking-tight">{resto.nom_restaurants}</h1>
+  <div class="mt-4 text-sm leading-relaxed">
+    <h2 class="font-bold">Horaires d'ouvertures :</h2>
+    <p>Lun. - Jeu. : {resto.horaires_ouvertures}</p>
+    <p>Vendredi : {resto.horaires_fermetures}</p>
+  </div>
+  <div class="mt-4 text-sm">
+    <h2 class="font-bold">Adresse :</h2>
+    <p>{resto.adresse_restaurants}</p>
+  </div>
+</section>

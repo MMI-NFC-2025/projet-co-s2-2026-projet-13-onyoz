@@ -4,7 +4,7 @@ import MapSection from '../components/map/MapSection.astro';
 import Resto from '../components/map/resto.astro';
 import { getRestaurantsPrixCroissant } from '../backend.mjs';
 
-const restaurants = await getRestaurantsPrixCroissant();
+const restaurants = await getRestaurantsPrixCroissant().catch(() => []);
 ---
 
 <Layout title="Onyoz - La Carte">
@@ -13,27 +13,32 @@ const restaurants = await getRestaurantsPrixCroissant();
     <MapSection />
   </div>
 
-  <div class="relative z-10 w-full min-h-screen pt-[50vh]">
+  <div class="relative z-10 w-full min-h-screen pt-[40vh] md:pt-10 pb-20">
     
-    <main class="w-full max-w-md mx-auto px-4 pb-12">
-     
+    <main class="w-full max-w-6xl mx-auto px-4">
 
-      <div class="space-y-4">
-        {restaurants.map((r) => <Resto resto={r} />)}
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {restaurants.map((r) => (
+          <div class="transform transition hover:scale-[1.02] duration-300">
+            <Resto resto={r} />
+          </div>
+        ))}
       </div>
 
     </main>
-
-    <footer class="bg-bordeaux p-8 text-white mt-10">
-       <p>Onyoz - Footer</p>
-    </footer>
-
   </div>
 
 </Layout>
 
 <style is:global>
   html, body {
-    background: transparent;
+    background: transparent ;
+  }
+
+  footer {
+    background-color: var(--bg-red);
+    position: relative;
+    z-index: 20;
+    margin-top: 50px;
   }
 </style>

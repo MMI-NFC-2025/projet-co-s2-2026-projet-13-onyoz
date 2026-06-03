@@ -1,0 +1,18 @@
+---
+const { avis } = Astro.props;
+---
+<section>
+  <h2 class="font-bold text-base mb-3">Notes et avis</h2>
+  <div class="flex gap-3 overflow-x-auto pb-2">
+    {avis.map((a) => (
+      <article class="min-w-[260px] bg-[#918786] text-white rounded p-4">
+        <h3 class="font-bold">{a.titre_avis}</h3>
+        <p class="text-xs mt-2">{a.contenu_avis}</p>
+        <div class="mt-3 text-yellow-400">★★★★☆</div>
+      </article>
+    ))}
+  </div>
+  <button class="mt-3 bg-[#8bc53f] text-white font-bold px-6 py-3 rounded-sm w-full">
+    Écrire un commentaire
+  </button>
+</section>
