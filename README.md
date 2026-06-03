@@ -3,20 +3,20 @@
 
 Éléménts à renseigner pour la soutenance :
 
-- [ ] Nom du projet :
+- [ ] Nom du projet : Onyoz
 - [ ] URL de la landing page :
 - [ ] URL de l'application finale :
-- [ ] URL de connexion au back office :
-- [ ] Identifiant de connexion au backoffice :
-- [ ] Mot de passe de connexion au backoffice :
-- [ ] URL de la maquette FIGMA :
-- [ ] Description du projet :
+- [ ] URL de connexion au back office : pbonyoz.lucie-garcia.fr/_/
+- [ ] Identifiant de connexion au backoffice : louise.langenfeld@edu.univ-fcomte.fr
+- [ ] Mot de passe de connexion au backoffice : Kirr@L0n!!
+- [ ] URL de la maquette FIGMA : https://www.figma.com/design/Upvff42Q1GSu6HcEy878Lx/Projet-S2_Onyoz_groupe-13?node-id=51-11&t=E7KgqqvdSu9GEFCb-1
+- [ ] Description du projet : Onyoz est une plateforme web destinée aux étudiants permettant de trouver facilement des restaurants adaptés à leur budget, de consulter les offres étudiantes disponibles et de découvrir des établissements proches grâce à une carte interactive. Le projet vise à simplifier la recherche de restauration étudiante tout en offrant davantage de visibilité aux restaurateurs locaux.
 
 ## 🚀 Équipe
 
 | Étudiants    | Prénom NOM  |
 | :----------- | :---------- |
-| Étudiant 1   | à compléter |
-| Étudiant 2   | à compléter |
-| Étudiant 3   | à compléter |
-| (Étudiant 4) | à compléter |
+| Étudiant 1   | Emma BADAROUS |
+| Étudiant 2   | Lucie GARCIA |
+| Étudiant 3   | Louise LANGENFELD |
+| (Étudiant 4) | X |
