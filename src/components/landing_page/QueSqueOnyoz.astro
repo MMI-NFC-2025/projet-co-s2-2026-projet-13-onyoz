@@ -5,67 +5,144 @@ import grosOignon from "../../assets/gors nonion(1).svg";
 import ellipse17 from "../../assets/Group 22(1).svg";
 ---
 
-<section class="relative py-20 px-6 bg-beige overflow-hidden">
-    <!-- Decorative rings left -->
-    <img
-        src={grosOignon.src}
-        width={237}
-        height={474}
-        aria-hidden="true"
-        class="absolute left-0 top-1/2 -translate-y-1/2 pointer-events-none select-none"
-    />
+<section class="qso-section">
+    <img src={grosOignon.src} aria-hidden="true" class="deco-gauche" />
+    <img src={ellipse17.src} aria-hidden="true" class="deco-droite" />
 
-    <!-- Decorative rings right -->
-    <img
-        src={ellipse17.src}
-        width={384}
-        height={384}
-        aria-hidden="true"
-        class="absolute right-0 top-1/2 -translate-y-1/2 pointer-events-none select-none"
-    />
-
-    <div class="max-w-5xl mx-auto relative">
-        <h2
-            class="text-center font-kodchasan font-bold text-3xl lg:text-4xl mb-16 flex items-center justify-center gap-2 flex-wrap"
-        >
-            Quesque c'est <LogoTxt class="h-10 lg:h-14 inline-block" /> ?
+    <div class="qso-inner">
+        <h2 class="qso-titre">
+            Qu'est-ce que c'est <LogoTxt class="logo-inline" /> ?
         </h2>
 
-        <!-- Desktop: image composée des 3 cartes -->
-        <div class="hidden lg:flex justify-center">
-            <img
-                src={group21.src}
-                alt="Map interactive, offres étudiantes et filtres"
-                class="w-full max-w-3xl object-contain"
-            />
+        <!-- Desktop : image -->
+        <div class="qso-desktop">
+            <img src={group21.src} alt="Map interactive, offres étudiantes et filtres" />
         </div>
 
-        <!-- Mobile: cartes en éventail -->
-        <div class="flex lg:hidden justify-center gap-3 items-start max-w-3xl mx-auto">
-            <!-- Carte gauche : décalée vers le bas -->
-            <div class="flex-1 bg-blanc rounded-2xl shadow-md p-4 border-l-4 border-vert mt-12">
-                <p class="font-poppins text-sm leading-loose">
-                    <strong>Offres etudiantes</strong><br />
-                    et<br />
-                    <strong class="text-base">bons plans</strong><br />
-                    mis en avant !
-                </p>
+        <!-- Mobile : 3 cartes -->
+        <div class="qso-mobile">
+            <div class="carte carte-gauche">
+                <p><strong>Offres étudiantes</strong><br />et<br /><strong>bons plans</strong><br />mis en avant !</p>
             </div>
-            <!-- Carte centre : en avant -->
-            <div class="flex-1 z-10 bg-blanc rounded-2xl shadow-xl p-5 border-b-4 border-rouge">
-                <h3 class="font-poppins font-bold text-lg mb-2">Map inetractive</h3>
-                <p class="font-poppins text-sm text-gris">
-                    pour trouver les établissement à proximité !
-                </p>
+            <div class="carte carte-centre">
+                <h3>Map interactive</h3>
+                <p>pour trouver les établissements à proximité !</p>
             </div>
-            <!-- Carte droite : décalée vers le bas -->
-            <div class="flex-1 bg-blanc rounded-2xl shadow-md p-4 border-r-4 border-vert mt-12 text-right">
-                <p class="font-poppins text-sm leading-loose">
-                    De<br />
-                    <strong class="text-base">nombreux filtres</strong><br />
-                    pour trouver ce qu'il vous faut !
-                </p>
+            <div class="carte carte-droite">
+                <p>De<br /><strong>nombreux filtres</strong><br />pour trouver ce qu'il vous faut !</p>
             </div>
         </div>
     </div>
 </section>
+
+<style>
+.qso-section {
+    position: relative;
+    padding: 5rem 1.5rem;
+    background-color: var(--color-beige);
+    overflow: hidden;
+}
+
+.deco-gauche {
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    pointer-events: none;
+    width: 237px;
+}
+
+.deco-droite {
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    pointer-events: none;
+    width: 384px;
+}
+
+.qso-inner {
+    max-width: 64rem;
+    margin: 0 auto;
+    position: relative;
+}
+
+.qso-titre {
+    text-align: center;
+    font-family: var(--font-kodchasan);
+    font-weight: 700;
+    font-size: 1.875rem;
+    margin-bottom: 4rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.logo-inline {
+    height: 2.5rem;
+    display: inline-block;
+}
+
+.qso-desktop {
+    display: none;
+}
+
+.qso-desktop img {
+    width: 100%;
+    max-width: 48rem;
+    object-fit: contain;
+    margin: 0 auto;
+    display: block;
+}
+
+.qso-mobile {
+    display: flex;
+    justify-content: center;
+    gap: 0.75rem;
+    align-items: flex-start;
+    max-width: 48rem;
+    margin: 0 auto;
+}
+
+.carte {
+    flex: 1;
+    background-color: var(--color-blanc);
+    border-radius: 1rem;
+    padding: 1rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    font-family: var(--font-poppins);
+    font-size: 0.875rem;
+}
+
+.carte h3 {
+    font-weight: 700;
+    font-size: 1.125rem;
+    margin-bottom: 0.5rem;
+}
+
+.carte-gauche {
+    border-left: 4px solid var(--color-vert);
+    margin-top: 3rem;
+}
+
+.carte-centre {
+    box-shadow: 0 10px 15px rgba(0, 0, 0, 0.15);
+    border-bottom: 4px solid var(--color-rouge);
+    z-index: 10;
+}
+
+.carte-droite {
+    border-right: 4px solid var(--color-vert);
+    margin-top: 3rem;
+    text-align: right;
+}
+
+@media (min-width: 1024px) {
+    .qso-desktop { display: flex; justify-content: center; }
+    .qso-mobile { display: none; }
+    .qso-titre { font-size: 2.25rem; }
+    .logo-inline { height: 3.5rem; }
+}
+</style>

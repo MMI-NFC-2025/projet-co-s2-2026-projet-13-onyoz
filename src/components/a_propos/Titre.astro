@@ -4,22 +4,50 @@ import demi_oignon_gauche from "../../assets/a_propos/demi_oignon_gauche.svg";
 import demi_oignon_droite from "../../assets/a_propos/demi_oignon_droit.svg";
 ---
 
-<section class="relative bg-beige px-6 pt-16 pb-6 overflow-hidden">
-    <!-- Cercles -->
-    <img
-        src={ellipse.src}
-        aria-hidden="true"
-        class="absolute -top-16 -left-16 w-72 opacity-40 pointer-events-none select-none"
-    />
-
-    <!-- Titre -->
-    <div class="relative z-10 flex items-center justify-center gap-3">
-        <img src={demi_oignon_gauche.src} />
-        
-        <h1 class="font-kodchasan font-bold text-4xl md:text-5xl text-noir mx-3">
-            Qui sommes-nous?
-        </h1>
-        <img src={demi_oignon_droite.src} />
-        
+<section class="titre-section">
+    <img src={ellipse.src} aria-hidden="true" class="deco" />
+    <div class="titre-content">
+        <img src={demi_oignon_gauche.src} aria-hidden="true" />
+        <h1>Qui sommes-nous&nbsp;?</h1>
+        <img src={demi_oignon_droite.src} aria-hidden="true" />
     </div>
 </section>
+
+<style>
+.titre-section {
+    position: relative;
+    background-color: var(--color-beige);
+    padding: 4rem 1.5rem 1.5rem;
+    overflow: hidden;
+}
+
+.deco {
+    position: absolute;
+    top: -4rem;
+    left: -4rem;
+    width: 18rem;
+    opacity: 0.4;
+    pointer-events: none;
+}
+
+.titre-content {
+    position: relative;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+}
+
+h1 {
+    font-family: var(--font-kodchasan);
+    font-weight: 700;
+    font-size: 2.25rem;
+    color: var(--color-noir);
+    margin: 0 0.75rem;
+}
+
+@media (min-width: 768px) {
+    h1 { font-size: 3rem; }
+}
+</style>

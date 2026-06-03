@@ -1,52 +1,49 @@
 ---
-import card1 from "../../assets/landing_page/card1.avif";
-import card2 from "../../assets/landing_page/card2.avif";
-import card3 from "../../assets/landing_page/card3.avif";
 import notremethode1 from "../../assets/landing_page/notre_methode.avif";
+import notremethodeMobile from "../../assets/landing_page/notremethode.avif";
 ---
 
-<section class="relative py-20 px-6 bg-beige overflow-hidden">
-   
-    <!-- Desktop: image composée des 3 phones -->
-    <div class="hidden lg:flex justify-center max-w-5xl mx-auto">
-        <img
-            src={notremethode1.src}
-            alt="Notre méthode : présélections, proximité, et détails des établissements"
-            class="w-full max-w-3xl object-contain drop-shadow-2xl"
-        />
+<section class="methode-section">
+    <!-- Desktop -->
+    <div class="methode-desktop">
+        <img src={notremethode1.src} alt="Notre méthode" />
     </div>
 
-    <!-- Mobile phones layout (stacked) -->
-    <div class="lg:hidden flex flex-col gap-10 items-center">
-        <div class="flex flex-col items-center gap-4">
-            <img
-                src={card1.src}
-                alt="Voir les établissements les plus proches"
-                class="h-64 object-contain drop-shadow-xl"
-            />
-            <div class="bg-blanc rounded-full px-5 py-2.5 shadow-md text-sm font-poppins text-center">
-                En vous proposant le plus proche !
-            </div>
-        </div>
-        <div class="flex flex-col items-center gap-4">
-            <div class="bg-blanc rounded-full px-5 py-2.5 shadow-md text-sm font-poppins text-center">
-                Avec des présélections !
-            </div>
-            <img
-                src={card2.src}
-                alt="Présélections de restaurants"
-                class="h-64 object-contain drop-shadow-xl"
-            />
-        </div>
-        <div class="flex flex-col items-center gap-4">
-            <img
-                src={card3.src}
-                alt="Détails des établissements"
-                class="h-64 object-contain drop-shadow-xl"
-            />
-            <div class="bg-blanc rounded-full px-5 py-2.5 shadow-md text-sm font-poppins text-center">
-                En détaillant tout !
-            </div>
-        </div>
+    <!-- Mobile -->
+    <div class="methode-mobile">
+        <img src={notremethodeMobile.src} alt="Notre méthode" />
     </div>
 </section>
+
+<style>
+.methode-section {
+    padding: 5rem 1.5rem;
+    background-color: var(--color-beige);
+}
+
+.methode-desktop {
+    display: none;
+}
+
+.methode-desktop img {
+    width: 100%;
+    max-width: 48rem;
+    object-fit: contain;
+    margin: 0 auto;
+    display: block;
+    filter: drop-shadow(0 20px 30px rgba(0, 0, 0, 0.2));
+}
+
+.methode-mobile img {
+    width: 100%;
+    max-width: 24rem;
+    object-fit: contain;
+    margin: 0 auto;
+    display: block;
+}
+
+@media (min-width: 1024px) {
+    .methode-desktop { display: flex; justify-content: center; }
+    .methode-mobile { display: none; }
+}
+</style>

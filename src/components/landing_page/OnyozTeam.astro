@@ -8,18 +8,65 @@ const membres = [
 ];
 ---
 
-<section class="py-16 px-6 bg-beige">
-    <h2 class="text-center font-kodchasan font-bold text-3xl lg:text-4xl mb-12">
-        La Onyoz' team
-    </h2>
-    <div class="flex flex-wrap justify-center gap-8 lg:gap-12 max-w-2xl mx-auto">
-        {
-            membres.map(({ name }) => (
-                <div class="flex flex-col items-center gap-3">
-                    <div class="w-24 h-24 rounded-full bg-gray-200 overflow-hidden" />
-                    <span class="font-poppins text-xs font-bold tracking-widest">{name}</span>
-                </div>
-            ))
-        }
+<section class="team-section">
+    <h2>La Onyoz' team</h2>
+    <div class="team-grille">
+        {membres.map(({ name }) => (
+            <div class="team-membre">
+                <div class="team-photo"></div>
+                <span>{name}</span>
+            </div>
+        ))}
     </div>
 </section>
+
+<style>
+.team-section {
+    padding: 4rem 1.5rem;
+    background-color: var(--color-beige);
+}
+
+h2 {
+    text-align: center;
+    font-family: var(--font-kodchasan);
+    font-weight: 700;
+    font-size: 1.875rem;
+    margin-bottom: 3rem;
+}
+
+.team-grille {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 2rem;
+    max-width: 42rem;
+    margin: 0 auto;
+}
+
+.team-membre {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.team-photo {
+    width: 6rem;
+    height: 6rem;
+    border-radius: 9999px;
+    background-color: #e5e7eb;
+    overflow: hidden;
+}
+
+span {
+    font-family: var(--font-poppins);
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+}
+
+@media (min-width: 1024px) {
+    h2 { font-size: 2.25rem; }
+    .team-grille { gap: 3rem; }
+}
+</style>

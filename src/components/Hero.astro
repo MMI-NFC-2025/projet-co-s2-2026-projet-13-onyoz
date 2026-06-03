@@ -3,27 +3,130 @@ import map from "../assets/landing_page/map.avif";
 import LogoTxt from "../assets/icons/logo_block(1).svg";
 ---
 
-<section
-    class="relative min-h-[90vh] flex items-center overflow-hidden pb-[18%] bg-beige"
->
-    <img
-        src={map.src}
-        alt=""
-        aria-hidden="true"
-        class="absolute bottom-0 left-0 w-full object-cover object-bottom"
-    />
-    <div class="relative z-10 w-full flex flex-col items-start px-8 lg:px-16">
-        <LogoTxt class="w-[50vw] max-w-4xl -mb-15 block" />
-        <p class="text-blanc font-poppins italic text-[36px] mb-10 ml-[40%]">
-            On épluche les bons plans pour vous !
-        </p>
-        <div class="w-full flex justify-end">
-            <a
-                href="/carte"
-                class="inline-flex items-center gap-3 bg-vert text-blanc font-poppins font-semibold text-base lg:text-lg px-8 py-4 rounded-full hover:opacity-90 transition-opacity"
-            >
-                <span aria-hidden="true">→</span> Allons y !
-            </a>
-        </div>
+<section class="hero">
+    <img src={map.src} alt="" aria-hidden="true" class="hero-bg" />
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+        <LogoTxt class="hero-logo" />
+        <p class="hero-tagline">On épluche les bons plans pour vous !</p>
+        <a href="/carte" class="hero-btn">→ Allons y !</a>
     </div>
 </section>
+
+<style>
+.hero {
+    position: relative;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+    background-color: var(--color-beige);
+}
+
+.hero-bg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+}
+
+.hero-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.3);
+}
+
+.hero-content {
+    position: relative;
+    z-index: 10;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 0 2rem;
+    gap: 1rem;
+}
+
+.hero-logo {
+    width: 55vw;
+    max-width: 20rem;
+    display: block;
+}
+
+.hero-tagline {
+    color: var(--color-blanc);
+    font-family: var(--font-poppins);
+    font-style: italic;
+    font-size: 1rem;
+    margin: 0;
+}
+
+.hero-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    background-color: var(--color-vert);
+    color: var(--color-blanc);
+    font-family: var(--font-poppins);
+    font-weight: 600;
+    font-size: 1rem;
+    padding: 0.75rem 2rem;
+    border-radius: 9999px;
+    text-decoration: none;
+    margin-top: 0.5rem;
+}
+
+.hero-btn:hover {
+    opacity: 0.9;
+}
+
+@media (min-width: 1024px) {
+    .hero {
+        min-height: 90vh;
+        padding-bottom: 18%;
+    }
+
+    .hero-bg {
+        position: absolute;
+        top: auto;
+        right: auto;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: auto;
+        object-position: bottom;
+    }
+
+    .hero-overlay {
+        display: none;
+    }
+
+    .hero-content {
+        align-items: flex-start;
+        text-align: left;
+        padding: 0 4rem;
+    }
+
+    .hero-logo {
+        width: 50vw;
+        max-width: 56rem;
+        margin-bottom: -3.75rem;
+    }
+
+    .hero-tagline {
+        font-size: 2.25rem;
+        margin-bottom: 2.5rem;
+        margin-left: 40%;
+    }
+
+    .hero-btn {
+        align-self: flex-end;
+        font-size: 1.125rem;
+        padding: 1rem 2rem;
+        margin-top: 0;
+    }
+}
+</style>
