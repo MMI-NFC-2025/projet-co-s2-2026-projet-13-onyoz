@@ -1,0 +1,140 @@
+<main class="min-h-screen bg-beige px-4 py-8 md:py-12">
+  <section class="max-w-2xl mx-auto">
+    <div class="mb-8">
+      <h1 class="text-3xl md:text-5xl font-bold text-noir">Creer un compte</h1>
+      <p class="mt-3 text-gris text-base md:text-lg">
+        Creez votre compte Onyoz puis connectez-vous.
+      </p>
+    </div>
+
+    <article class="bg-white rounded-3xl shadow-lg p-6 md:p-8">
+      <form id="signup-form" class="space-y-4">
+        <label class="block">
+          <span class="text-sm font-semibold text-gris">Nom</span>
+          <input
+            id="signup-name"
+            name="name"
+            type="text"
+            class="mt-1 w-full rounded-xl border border-black/15 px-4 py-3 outline-none focus:ring-2 focus:ring-vert/40"
+            placeholder="Votre nom"
+          />
+        </label>
+
+        <label class="block">
+          <span class="text-sm font-semibold text-gris">Email</span>
+          <input
+            id="signup-email"
+            name="email"
+            type="email"
+            required
+            class="mt-1 w-full rounded-xl border border-black/15 px-4 py-3 outline-none focus:ring-2 focus:ring-vert/40"
+            placeholder="vous@exemple.fr"
+          />
+        </label>
+
+        <label class="block">
+          <span class="text-sm font-semibold text-gris">Mot de passe</span>
+          <input
+            id="signup-password"
+            name="password"
+            type="password"
+            required
+            minlength="8"
+            class="mt-1 w-full rounded-xl border border-black/15 px-4 py-3 outline-none focus:ring-2 focus:ring-vert/40"
+            placeholder="8 caracteres minimum"
+          />
+        </label>
+
+        <label class="block">
+          <span class="text-sm font-semibold text-gris">Confirmer le mot de passe</span>
+          <input
+            id="signup-password-confirm"
+            name="passwordConfirm"
+            type="password"
+            required
+            minlength="8"
+            class="mt-1 w-full rounded-xl border border-black/15 px-4 py-3 outline-none focus:ring-2 focus:ring-vert/40"
+            placeholder="Confirmer le mot de passe"
+          />
+        </label>
+
+        <div class="flex flex-wrap gap-3 pt-2">
+          <button
+            type="submit"
+            class="bg-vert text-white font-bold px-5 py-3 rounded-xl hover:brightness-95 transition"
+          >
+            Creer mon compte
+          </button>
+
+          <a
+            href="/se_connecter"
+            class="inline-flex items-center bg-bordeaux text-white font-bold px-5 py-3 rounded-xl hover:brightness-95 transition"
+          >
+            Aller a la connexion
+          </a>
+        </div>
+      </form>
+
+      <p id="signup-message" class="mt-4 text-sm font-medium"></p>
+    </article>
+  </section>
+</main>
+
+<script type="module">
+  import PocketBase from "pocketbase";
+
+  const pb = new PocketBase("http://pbonyoz.lucie-garcia.fr");
+  pb.autoCancellation(false);
+
+  const signupForm = document.getElementById("signup-form");
+  const signupMessage = document.getElementById("signup-message");
+
+  function showSignupMessage(text, kind = "info") {
+    if (!signupMessage) return;
+    signupMessage.textContent = text;
+    signupMessage.className = "mt-4 text-sm font-medium";
+    if (kind === "error") signupMessage.classList.add("text-bordeaux");
+    if (kind === "success") signupMessage.classList.add("text-vert");
+    if (kind === "info") signupMessage.classList.add("text-gris");
+  }
+
+  if (signupForm) {
+    signupForm.addEventListener("submit", async (event) => {
+      event.preventDefault();
+
+      const formData = new FormData(signupForm);
+      const name = String(formData.get("name") || "").trim();
+      const email = String(formData.get("email") || "").trim();
+      const password = String(formData.get("password") || "");
+      const passwordConfirm = String(formData.get("passwordConfirm") || "");
+
+      if (password !== passwordConfirm) {
+        showSignupMessage("Les mots de passe ne correspondent pas.", "error");
+        return;
+      }
+
+      const usernameBase = email.split("@")[0] || "user";
+      const username = `${usernameBase}_${Math.random().toString(36).slice(2, 8)}`;
+
+      try {
+        await pb.collection("users").create({
+          username,
+          email,
+          password,
+          passwordConfirm,
+          name,
+          emailVisibility: true,
+        });
+
+        signupForm.reset();
+        showSignupMessage("Compte cree avec succes. Redirection vers la connexion...", "success");
+        setTimeout(() => {
+          window.location.href = "/se_connecter";
+        }, 1200);
+      } catch (error) {
+        console.error(error);
+        showSignupMessage("Impossible de creer le compte. Verifiez les informations.", "error");
+      }
+    });
+  }
+</script>

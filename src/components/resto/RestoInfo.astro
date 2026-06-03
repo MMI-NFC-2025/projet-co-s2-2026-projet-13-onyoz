@@ -1,15 +1,22 @@
 ---
 const { resto } = Astro.props;
+
+const opening = resto?.horaires_ouvertures ?? "-";
+const closing = resto?.horaires_fermetures ?? "-";
+const address = resto?.adresse_restaurants ?? "Adresse non renseignee";
 ---
 <section>
-  <h1 class="text-2xl font-bold tracking-tight">{resto.nom_restaurants}</h1>
-  <div class="mt-4 text-sm leading-relaxed">
-    <h2 class="font-bold">Horaires d'ouvertures :</h2>
-    <p>Lun. - Jeu. : {resto.horaires_ouvertures}</p>
-    <p>Vendredi : {resto.horaires_fermetures}</p>
+  <h1 class="text-3xl md:text-5xl font-bold tracking-tight text-noir">{resto.nom_restaurants}</h1>
+
+  <div class="mt-6 text-base leading-relaxed space-y-2">
+    <h2 class="font-bold text-2xl md:text-4xl">Horaires d'ouvertures</h2>
+    <p class="flex justify-between gap-4 border-b border-black/10 pb-1"><span>Lun. - Jeu.</span><span>{opening} - {closing}</span></p>
+    <p class="flex justify-between gap-4 border-b border-black/10 pb-1"><span>Vendredi</span><span>{opening} - {closing}</span></p>
+    <p class="flex justify-between gap-4"><span>Sam. - Dim</span><span>{opening}</span></p>
   </div>
-  <div class="mt-4 text-sm">
-    <h2 class="font-bold">Adresse :</h2>
-    <p>{resto.adresse_restaurants}</p>
+
+  <div class="mt-6 text-base">
+    <h2 class="font-bold text-2xl">Adresse</h2>
+    <p class="text-gris mt-1">{address}</p>
   </div>
 </section>

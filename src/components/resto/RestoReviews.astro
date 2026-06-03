@@ -1,18 +1,260 @@
 ---
-const { avis } = Astro.props;
+interface Props {
+  avis: unknown;
+  restoId?: string;
+}
+
+const { avis, restoId } = Astro.props as Props;
+
+interface Review {
+  id?: string;
+  titre_avis?: string;
+  contenu_avis?: string;
+  note_avis?: number;
+  auteur?: string;
+  created?: string;
+}
+
+const reviews: Review[] = Array.isArray(avis) ? avis : [];
+
+function starsFor(value?: number) {
+  const numericValue = typeof value === "number" ? value : 4;
+  const safe = Math.min(5, Math.max(0, Math.round(numericValue)));
+  return "★".repeat(safe) + "☆".repeat(5 - safe);
+}
+
+function formatDate(value?: string) {
+  if (!value) return "";
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return "";
+  return new Intl.DateTimeFormat("fr-FR", {
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+  }).format(date);
+}
 ---
-<section>
-  <h2 class="font-bold text-base mb-3">Notes et avis</h2>
-  <div class="flex gap-3 overflow-x-auto pb-2">
-    {avis.map((a) => (
-      <article class="min-w-[260px] bg-[#918786] text-white rounded p-4">
-        <h3 class="font-bold">{a.titre_avis}</h3>
-        <p class="text-xs mt-2">{a.contenu_avis}</p>
-        <div class="mt-3 text-yellow-400">★★★★☆</div>
-      </article>
-    ))}
-  </div>
-  <button class="mt-3 bg-[#8bc53f] text-white font-bold px-6 py-3 rounded-sm w-full">
-    Écrire un commentaire
-  </button>
+<section aria-labelledby="reviews-title">
+  <h2 id="reviews-title" class="font-bold text-2xl mb-3">Notes et avis</h2>
+
+  <ul id="reviews-list" class="flex md:grid md:grid-cols-1 xl:grid-cols-2 gap-3 overflow-x-auto md:overflow-visible pb-2 list-none p-0 m-0" role="list">
+    {reviews.length > 0 ? reviews.map((a) => (
+      <li>
+        <article class="min-w-65 md:min-w-0 bg-[#918786] text-white rounded-xl p-4 shadow-md">
+          <h3 class="font-bold">{a.titre_avis || 'Avis client'}</h3>
+          <p class="text-sm mt-2 leading-relaxed">{a.contenu_avis || 'Aucun contenu d avis pour le moment.'}</p>
+          <p class="mt-3 text-yellow-300 text-lg" aria-label={`Note ${typeof a.note_avis === 'number' ? Math.round(a.note_avis) : 4} sur 5`}>
+            {starsFor(a.note_avis)}
+          </p>
+          <p class="text-xs mt-2 opacity-90">{a.auteur || 'Utilisateur Onyoz'}</p>
+          {a.created && (
+            <p class="text-xs mt-1 opacity-90">Publié le {formatDate(a.created)}</p>
+          )}
+        </article>
+      </li>
+    )) : (
+      <li id="reviews-empty-state">
+        <article class="min-w-65 md:min-w-0 bg-[#918786] text-white rounded-xl p-4 shadow-md">
+          <h3 class="font-bold">Aucun avis pour le moment</h3>
+          <p class="text-sm mt-2">Soyez la premiere personne a laisser un commentaire.</p>
+        </article>
+      </li>
+    )}
+  </ul>
+
+  <form id="review-form" class="mt-4 grid gap-3 bg-[#f4f1ec] rounded-xl p-4" aria-describedby="review-help">
+    <fieldset class="grid gap-3 border-0 p-0 m-0">
+      <legend class="font-bold text-base">Écrire un commentaire</legend>
+      <p id="review-help" class="text-xs text-[#5d5554]">Les champs marqués d un astérisque sont obligatoires.</p>
+
+      <label for="review-title" class="text-sm">Titre *</label>
+      <input
+        id="review-title"
+        name="titre"
+        type="text"
+        maxlength="80"
+        required
+        autocomplete="off"
+        class="rounded-md border border-[#cfc7be] bg-white px-3 py-2"
+      />
+
+      <label for="review-author" class="text-sm">Votre prénom (optionnel)</label>
+      <input
+        id="review-author"
+        name="auteur"
+        type="text"
+        maxlength="50"
+        autocomplete="name"
+        class="rounded-md border border-[#cfc7be] bg-white px-3 py-2"
+      />
+
+      <label for="review-note" class="text-sm">Note *</label>
+      <select id="review-note" name="note" required class="rounded-md border border-[#cfc7be] bg-white px-3 py-2">
+        <option value="5">5 sur 5</option>
+        <option value="4" selected>4 sur 5</option>
+        <option value="3">3 sur 5</option>
+        <option value="2">2 sur 5</option>
+        <option value="1">1 sur 5</option>
+      </select>
+
+      <label for="review-content" class="text-sm">Commentaire *</label>
+      <textarea
+        id="review-content"
+        name="contenu"
+        rows="4"
+        minlength="8"
+        maxlength="800"
+        required
+        class="rounded-md border border-[#cfc7be] bg-white px-3 py-2"
+      ></textarea>
+    </fieldset>
+
+    <button
+      id="review-submit"
+      type="submit"
+      class="bg-[#8bc53f] text-white font-bold px-6 py-3 rounded-md w-full hover:brightness-95 transition"
+    >
+      Envoyer le commentaire
+    </button>
+
+    <p id="review-status" class="text-sm min-h-5" role="status" aria-live="polite"></p>
+    <p id="review-error" class="text-sm min-h-5" role="alert" aria-live="assertive"></p>
+  </form>
 </section>
+
+<script define:vars={{ restoId }}>
+  const REVIEW_COLLECTION_URL = 'http://pbonyoz.lucie-garcia.fr/api/collections/avis/records';
+
+  const form = document.getElementById('review-form');
+  const statusEl = document.getElementById('review-status');
+  const errorEl = document.getElementById('review-error');
+  const reviewsList = document.getElementById('reviews-list');
+  const submitBtn = document.getElementById('review-submit');
+
+  const toSafeText = (value, fallback = '') => {
+    const text = String(value ?? '').trim();
+    return text || fallback;
+  };
+
+  const toSafeNote = (value) => {
+    const parsed = Number(value);
+    if (!Number.isFinite(parsed)) return 4;
+    return Math.min(5, Math.max(1, Math.round(parsed)));
+  };
+
+  const starsForClient = (note) => '★'.repeat(note) + '☆'.repeat(5 - note);
+
+  const setStatus = (message) => {
+    if (!statusEl || !errorEl) return;
+    statusEl.textContent = message;
+    errorEl.textContent = '';
+  };
+
+  const setError = (message) => {
+    if (!statusEl || !errorEl) return;
+    statusEl.textContent = '';
+    errorEl.textContent = message;
+  };
+
+  const setLoading = (isLoading) => {
+    if (!submitBtn || !form) return;
+    submitBtn.disabled = isLoading;
+    submitBtn.textContent = isLoading ? 'Envoi en cours...' : 'Envoyer le commentaire';
+    form.setAttribute('aria-busy', String(isLoading));
+  };
+
+  const createReviewCard = (review) => {
+    const article = document.createElement('article');
+    article.className = 'min-w-65 md:min-w-0 bg-[#918786] text-white rounded-xl p-4 shadow-md';
+
+    const title = document.createElement('h3');
+    title.className = 'font-bold';
+    title.textContent = toSafeText(review.titre_avis, 'Avis client');
+
+    const content = document.createElement('p');
+    content.className = 'text-sm mt-2 leading-relaxed';
+    content.textContent = toSafeText(review.contenu_avis, 'Aucun contenu d avis pour le moment.');
+
+    const noteValue = toSafeNote(review.note_avis);
+    const note = document.createElement('p');
+    note.className = 'mt-3 text-yellow-300 text-lg';
+    note.setAttribute('aria-label', `Note ${noteValue} sur 5`);
+    note.textContent = starsForClient(noteValue);
+
+    const author = document.createElement('p');
+    author.className = 'text-xs mt-2 opacity-90';
+    author.textContent = toSafeText(review.auteur, 'Utilisateur Onyoz');
+
+    article.append(title, content, note, author);
+
+    const item = document.createElement('li');
+    item.appendChild(article);
+    return item;
+  };
+
+  if (form && statusEl && errorEl && reviewsList) {
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+
+      if (!restoId) {
+        setError('Impossible d envoyer le commentaire: restaurant introuvable.');
+        return;
+      }
+
+      if (!form.checkValidity()) {
+        form.reportValidity();
+        return;
+      }
+
+      const formData = new FormData(form);
+      const titre = toSafeText(formData.get('titre'));
+      const auteur = toSafeText(formData.get('auteur'));
+      const contenu = toSafeText(formData.get('contenu'));
+      const note = toSafeNote(formData.get('note'));
+
+      const payload = {
+        titre_avis: titre,
+        contenu_avis: contenu,
+        note_avis: note,
+        auteur: auteur || 'Utilisateur Onyoz',
+        restaurants_avis: restoId,
+      };
+
+      try {
+        setLoading(true);
+        setStatus('Envoi en cours...');
+
+        const response = await fetch(REVIEW_COLLECTION_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
+        });
+
+        if (!response.ok) {
+          throw new Error(`Erreur HTTP ${response.status}`);
+        }
+
+        const created = await response.json();
+        const emptyState = document.getElementById('reviews-empty-state');
+        if (emptyState) {
+          emptyState.remove();
+        }
+
+        reviewsList.prepend(createReviewCard(created));
+        form.reset();
+
+        const noteField = form.querySelector('select[name="note"]');
+        if (noteField) {
+          noteField.value = '4';
+        }
+
+        setStatus('Commentaire envoye avec succes.');
+      } catch (error) {
+        console.error('Erreur lors de l envoi du commentaire :', error);
+        setError('Erreur lors de l envoi. Reessayez dans un instant.');
+      } finally {
+        setLoading(false);
+      }
+    });
+  }
+</script>

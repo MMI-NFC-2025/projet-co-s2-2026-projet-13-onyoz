@@ -1,5 +1,43 @@
+---
+const { resto } = Astro.props;
+
+const lat = resto?.localisation?.lat;
+const lon = resto?.localisation?.lon;
+const hasCoordinates = typeof lat === "number" && typeof lon === "number";
+
+const delta = 0.006;
+const left = lon - delta;
+const right = lon + delta;
+const top = lat + delta;
+const bottom = lat - delta;
+const mapSrc = `https://www.openstreetmap.org/export/embed.html?bbox=${left}%2C${bottom}%2C${right}%2C${top}&layer=mapnik&marker=${lat}%2C${lon}`;
+const mapLink = `https://www.openstreetmap.org/?mlat=${lat}&mlon=${lon}#map=16/${lat}/${lon}`;
+---
+
 <section>
-  <div class="rounded overflow-hidden border">
-    <img src="/images/map-placeholder.jpg" alt="Localisation" class="w-full h-44 object-cover" />
-  </div>
+  <h2 class="font-bold text-2xl mb-3">Localisation</h2>
+  {
+    hasCoordinates ? (
+      <div class="rounded-xl overflow-hidden border border-black/10">
+        <iframe
+          src={mapSrc}
+          title={`Localisation de ${resto.nom_restaurants}`}
+          class="w-full h-52 md:h-64"
+          loading="lazy"
+        ></iframe>
+      </div>
+    ) : (
+      <div class="rounded-xl border border-black/10 p-4 text-sm text-gris bg-white">
+        Localisation indisponible pour ce restaurant.
+      </div>
+    )
+  }
+
+  {
+    hasCoordinates && (
+      <a href={mapLink} target="_blank" rel="noopener noreferrer" class="inline-block mt-3 text-sm underline text-bordeaux hover:text-rouge transition">
+        Ouvrir la carte
+      </a>
+    )
+  }
 </section>

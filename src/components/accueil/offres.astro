@@ -16,16 +16,18 @@ const affichees = offres.slice(0, 2);
   <ul class="grid grid-cols-2 md:grid-cols-4 gap-4 list-none p-0" role="list">
     {affichees.map((resto) => (
       <li>
-        <article aria-label={`Offre : ${resto.nom_restaurants}`}>
-          <div class="rounded-xl overflow-hidden shadow transition hover:shadow-md">
-            <img
-              src={`${BASE}/${resto.id}/${resto.images_principale}`}
-              alt={`Devanture de ${resto.nom_restaurants}`}
-              class="w-full h-32 md:h-40 object-cover" 
-              loading="lazy"
-            />
-          </div>
-        </article>
+        <a href={`/resto/${resto.id}`} class="block" aria-label={`Voir la fiche du restaurant ${resto.nom_restaurants}`}>
+          <article aria-label={`Offre : ${resto.nom_restaurants}`}>
+            <div class="rounded-xl overflow-hidden shadow transition hover:shadow-md">
+              <img
+                src={`${BASE}/${resto.id}/${resto.images_principale}`}
+                alt={`Devanture de ${resto.nom_restaurants}`}
+                class="w-full h-32 md:h-40 object-cover" 
+                loading="lazy"
+              />
+            </div>
+          </article>
+        </a>
       </li>
     ))}
   </ul>

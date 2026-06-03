@@ -1,5 +1,5 @@
 ---
-import { getImagesPrincipales, getRestaurantById, getRestaurantsFavoris } from '../../backend.mjs';
+import { getRestaurantById, getRestaurantsFavoris } from '../../backend.mjs';
 
 const BASE = 'http://pbonyoz.lucie-garcia.fr/api/files/pbc_1567773776';
 
@@ -13,8 +13,8 @@ const favoris = await Promise.all(ids.map(id => getRestaurantById(id)));
     Vos favoris
   </h2>
 
-  {/* MODIFICATION : grid-cols-2 (mobile) -> sm:grid-cols-3 (tablette) -> md:grid-cols-4 (PC) */}
-  <ul id="favoris-list" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 list-none p-0 m-0" role="list">
+  {/* Responsive: 1 col sur petits mobiles, puis 2 et 4 colonnes */}
+  <ul id="favoris-list" class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 list-none p-0 m-0" role="list">
     {favoris.map((resto) => (
       <li class="h-full">
         {/* h-full et flex-col pour garder l'alignement vertical propre */}
@@ -27,7 +27,7 @@ const favoris = await Promise.all(ids.map(id => getRestaurantById(id)));
             <img
               src={`${BASE}/${resto.id}/${resto.images_principale}`}
               alt={`Photo du restaurant ${resto.nom_restaurants}`}
-              class="w-full h-32 object-cover"
+              class="w-full h-36 object-cover"
               loading="lazy"
               decoding="async"
             />
@@ -52,7 +52,9 @@ const favoris = await Promise.all(ids.map(id => getRestaurantById(id)));
           {/* flex-1 force le contenu à s'aligner par le bas uniformément */}
           <div class="p-3 flex flex-col gap-1 flex-1 justify-between">
             <div>
-              <h3 class="font-bold text-sm leading-tight mb-0.5">{resto.nom_restaurants}</h3>
+              <h3 class="font-bold text-sm leading-tight mb-0.5">
+                <a href={`/resto/${resto.id}`} class="underline-offset-2 hover:underline focus:underline">{resto.nom_restaurants}</a>
+              </h3>
               <p class="text-xs font-semibold text-or">{resto.prix_moyen} €</p>
 
               <ul class="flex flex-wrap gap-1 list-none p-0 my-1" aria-label="Régimes alimentaires" role="list">
@@ -89,6 +91,8 @@ const favoris = await Promise.all(ids.map(id => getRestaurantById(id)));
               <time>{resto.horaires_ouvertures}h</time>{' – '}
               <time>{resto.horaires_fermetures}h</time>
             </p>
+
+            <a href={`/resto/${resto.id}`} class="text-[11px] text-blanc underline mt-1 w-fit">Voir la fiche</a>
           </div>
         </article>
       </li>
@@ -111,7 +115,9 @@ const favoris = await Promise.all(ids.map(id => getRestaurantById(id)));
 
   // 2. Gérer le clic sur l'étoile directement depuis la section favoris
   document.querySelectorAll('.fav-btn-page').forEach((btn) => {
-    btn.addEventListener('click', async () => {
+    btn.addEventListener('click', async (event) => {
+      event.stopPropagation();
+
       const card = btn.closest('.fav-card') as HTMLElement;
       const id = card?.dataset.id;
       const li = card?.closest('li');
@@ -132,4 +138,5 @@ const favoris = await Promise.all(ids.map(id => getRestaurantById(id)));
       }
     });
   });
+
 </script>

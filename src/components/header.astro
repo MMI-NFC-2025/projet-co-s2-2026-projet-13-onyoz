@@ -5,23 +5,23 @@ import Logo from "../assets/icons/logo_P.svg";
 
 <header class="site-header">
     <div class="header-inner">
-        <a href="/" class="header-logo">
+        <a href="/" class="header-logo" aria-label="Aller a l accueil Onyoz">
             <Logo />
         </a>
 
-        <button class="menu-btn" id="menu-btn" aria-label="menu" aria-expanded="false" aria-controls="mainNav">
+        <button class="menu-btn" id="menu-btn" aria-label="Ouvrir le menu principal" aria-expanded="false" aria-controls="mainNav">
             <span></span>
             <span></span>
             <span></span>
         </button>
 
-        <nav class="main-nav" id="mainNav" aria-hidden="true">
+        <nav class="main-nav" id="mainNav" aria-label="Navigation principale" aria-hidden="true">
             <ul>
                 <li><a href="/">Accueil</a></li>
                 <li><a href="/a_propos">À propos d'Onyoz</a></li> 
                 <li><a href="/carte">Carte</a></li>
                 <li><a href="/contact">Contact</a></li>
-                <li class="nav-btn-connect"><a href="/contact">Se connecter</a></li>
+                <li class="nav-btn-connect"><a href="/se_connecter">Se connecter</a></li>
             </ul>
         </nav>
     </div>
@@ -202,17 +202,44 @@ import Logo from "../assets/icons/logo_P.svg";
 </style>
 
 <script>
-    const toggle = document.querySelector("#menu-btn");
-    const nav = document.querySelector("#mainNav");
+    const toggle = document.querySelector<HTMLButtonElement>("#menu-btn");
+    const nav = document.querySelector<HTMLElement>("#mainNav");
     const page = document.body;
+    const desktopWidth = 1024;
 
     if (toggle && nav) {
+        const setMenuState = (open: boolean) => {
+            toggle.setAttribute("aria-expanded", String(open));
+            toggle.setAttribute("aria-label", open ? "Fermer le menu principal" : "Ouvrir le menu principal");
+            nav.setAttribute("aria-hidden", String(!open));
+            toggle.classList.toggle("is-open", open);
+            page.classList.toggle("noscroll", open && window.innerWidth < desktopWidth);
+        };
+
         toggle.addEventListener("click", () => {
             const isOpen = toggle.getAttribute("aria-expanded") === "true";
-            toggle.setAttribute("aria-expanded", String(!isOpen));
-            nav.setAttribute("aria-hidden", String(isOpen));
-            toggle.classList.toggle("is-open", !isOpen);
-            page.classList.toggle("noscroll", !isOpen);
+            setMenuState(!isOpen);
+        });
+
+        nav.querySelectorAll("a").forEach((link) => {
+            link.addEventListener("click", () => {
+                if (window.innerWidth < desktopWidth) {
+                    setMenuState(false);
+                }
+            });
+        });
+
+        document.addEventListener("keydown", (event) => {
+            if (event.key === "Escape") {
+                setMenuState(false);
+                toggle.focus();
+            }
+        });
+
+        window.addEventListener("resize", () => {
+            if (window.innerWidth >= desktopWidth) {
+                setMenuState(false);
+            }
         });
     }
 </script>
