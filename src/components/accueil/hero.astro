@@ -1,50 +1,61 @@
 ---
 import { Image } from 'astro:assets';
 import image from '../../assets/images/fond.avif';
+import logo from '../../assets/icons/logo_block(1).svg';
 ---
 
-<section aria-labelledby="hero-titre">
-  <div class="relative w-full h-72 overflow-hidden">
-
-    <!-- Image décorative : alt vide — RGAA 1.2 -->
+<div class="flex flex-col min-h-[650px] md:min-h-[750px] w-full bg-noir">
+  <section aria-labelledby="hero-tagline" class="relative flex-1 flex flex-col items-center justify-center px-6 py-12 md:py-20 text-blanc overflow-hidden">
+    
     <Image
       src={image}
       alt=""
       aria-hidden="true"
-      class="absolute inset-0 w-full h-full object-cover opacity-80"
+      class="absolute inset-0 w-full h-full object-cover opacity-60"
     />
-    <div class="absolute inset-0 bg-noir/30" aria-hidden="true"></div>
+    
+    <div class="relative z-10 flex flex-col items-center w-full max-w-sm md:max-w-2xl lg:max-w-3xl gap-6 md:gap-10 text-center">
+      
+      <div class="w-60 h-20 md:w-80 md:h-28 flex items-center justify-center my-1 transition-all">
+        <img src={logo.src} alt="Onyoz" class="w-full h-full object-contain" />
+      </div>
 
-    <div class="relative z-10 flex flex-col items-center justify-center h-full gap-5 px-6">
-
-      <p id="hero-titre" class="text-blanc text-center text-lg font-semibold leading-snug drop-shadow">
-        On épluche les bons plans<br />pour vous !
+      <p id="hero-tagline" class="text-blanc text-base md:text-xl lg:text-2xl font-medium leading-relaxed max-w-[260px] md:max-w-none drop-shadow-sm">
+        On épluche les bons plans<br class="md:hidden" /> pour vous !
       </p>
 
-      <!-- Lien avec intitulé explicite — RGAA 6.1 -->
-      <a
-        href="/carte"
-        class="flex items-center gap-2 bg-vert text-blanc font-semibold px-6 py-3 rounded-full shadow-md hover:brightness-110 focus:outline-none focus:ring-2 focus:ring-blanc focus:ring-offset-2 focus:ring-offset-bordeaux transition"
-      >
-        <!-- Icône décorative — RGAA 1.2 -->
-        <span aria-hidden="true">→</span>
-        Accéder à la carte
-      </a>
+      <div class="w-full flex flex-col md:flex-row items-center justify-center gap-4 md:gap-6 max-w-sm md:max-w-xl lg:max-w-2xl mt-2">
+        
+        <a
+          href="/carte"
+          class="w-full md:flex-1 bg-vert text-blanc font-bold py-3.5 px-6 rounded-xl shadow-md hover:brightness-110 focus:outline-none focus:ring-2 focus:ring-blanc transition flex items-center justify-center gap-3 whitespace-nowrap"
+        >
+          <svg class="w-5 h-5 shrink-0" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M14 5l7 7-7 7-1.41-1.41L17.17 13H3v-2h14.17l-4.59-4.59L14 5z"/>
+          </svg>
+          Accéder à la carte
+        </a>
 
-      <!-- Champ de recherche avec label visible masqué — RGAA 11.1 -->
-      <div role="search" class="flex items-center bg-blanc/90 rounded-full px-4 py-2 w-full max-w-sm shadow">
-        <label for="champ-recherche" class="sr-only">
-          Rechercher un restaurant
-        </label>
-        <input
-          id="champ-recherche"
-          type="search"
-          placeholder="Rechercher un restaurant..."
-          autocomplete="off"
-          class="bg-transparent outline-none text-sm text-gris w-full placeholder:text-gris focus:outline-none"
-        />
+        <div role="search" class="w-full md:flex-1 border-2 border-bordeaux bg-noir/20 backdrop-blur-md rounded-full px-5 py-3.5 flex items-center gap-3 shadow-inner">
+          <svg aria-hidden="true" focusable="false" class="w-5 h-5 text-vert shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+            <circle cx="11" cy="11" r="8"/>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+          </svg>
+          
+          <label for="champ-recherche" class="sr-only">
+            Rechercher un restaurant
+          </label>
+          <input
+            id="champ-recherche"
+            type="search"
+            placeholder="recherche"
+            autocomplete="off"
+            class="bg-transparent outline-none text-sm text-blanc w-full placeholder:text-blanc/60 focus:outline-none"
+          />
+        </div>
+
       </div>
 
     </div>
-  </div>
-</section>
+  </section>
+</div>

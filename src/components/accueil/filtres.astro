@@ -5,206 +5,154 @@ const BASE = 'http://pbonyoz.lucie-garcia.fr/api/files/pbc_1567773776';
 const restaurants = await getRestaurantsPrixCroissant();
 ---
 
-<section aria-labelledby="titre-filtres" class="px-4 py-6">
+{/* max-w-7xl mx-auto évite l'étalement infini sur très grand écran */}
+<section aria-labelledby="titre-filtres" class="px-4 py-6 max-w-7xl mx-auto w-full">
   <h2 id="titre-filtres" class="text-xl font-bold text-noir mb-1">Filtres</h2>
   <p class="text-sm text-gris mb-4" id="filtres-description">
     Sélectionnez des filtres pour trouver ce qu'il vous faut !
   </p>
 
-  <!-- RGAA 12 – navigation de filtrage avec aria-label -->
   <nav aria-label="Filtres de recherche de restaurants" aria-describedby="filtres-description">
     <ul class="flex flex-wrap gap-2 mb-4 list-none p-0 m-0" role="list">
-
-      <!-- Dropdown Prix (RGAA 7 – aria-expanded + aria-controls) -->
       <li>
         <button
           id="btn-prix"
           aria-haspopup="true"
           aria-expanded="false"
           aria-controls="dropdown-prix"
-          class="flex items-center gap-1 border border-gris rounded-full px-3 py-1 text-sm font-medium bg-blanc hover:bg-beige focus:outline-2 focus:outline-bordeaux focus:outline-offset-1 transition"
+          class="flex items-center gap-1 border border-gris rounded-full px-3 py-1 text-sm font-medium bg-blanc hover:bg-beige focus:outline-2 focus:outline-bordeaux transition"
         >
-          Trier par prix
-          <!-- Icône décorative -->
-          <span aria-hidden="true" class="text-xs">▾</span>
+          Trier par prix <span aria-hidden="true" class="text-xs">▾</span>
         </button>
       </li>
 
-      <!-- Dropdown Type -->
       <li>
         <button
           id="btn-type"
           aria-haspopup="true"
           aria-expanded="false"
           aria-controls="dropdown-type"
-          class="flex items-center gap-1 border border-gris rounded-full px-3 py-1 text-sm font-medium bg-blanc hover:bg-beige focus:outline-2 focus:outline-bordeaux focus:outline-offset-1 transition"
+          class="flex items-center gap-1 border border-gris rounded-full px-3 py-1 text-sm font-medium bg-blanc hover:bg-beige focus:outline-2 focus:outline-bordeaux transition"
         >
-          Filtrer par type
-          <span aria-hidden="true" class="text-xs">▾</span>
+          Filtrer par types <span aria-hidden="true" class="text-xs">▾</span>
         </button>
       </li>
-
-      <!-- RGAA 7 – aria-pressed pour les toggles -->
-      <li>
-        <button
-          class="flex items-center gap-1 border border-vert text-vert rounded-full px-3 py-1 text-sm font-medium bg-blanc focus:outline-2 focus:outline-bordeaux focus:outline-offset-1 transition filter-tag"
-          data-filter="vege"
-          aria-pressed="false"
-        >
-          <span aria-hidden="true">🌿</span>
-          Végétarien
-        </button>
-      </li>
-
-      <li>
-        <button
-          class="flex items-center gap-1 border border-vert text-vert rounded-full px-3 py-1 text-sm font-medium bg-blanc focus:outline-2 focus:outline-bordeaux focus:outline-offset-1 transition filter-tag"
-          data-filter="halal"
-          aria-pressed="false"
-        >
-          <span aria-hidden="true">☪</span>
-          Halal
-        </button>
-      </li>
-
-      <li>
-        <button
-          class="flex items-center gap-1 border border-vert text-vert rounded-full px-3 py-1 text-sm font-medium bg-blanc focus:outline-2 focus:outline-bordeaux focus:outline-offset-1 transition filter-tag"
-          data-filter="glutten"
-          aria-pressed="false"
-        >
-          <span aria-hidden="true">🌾</span>
-          Sans gluten
-        </button>
-      </li>
-
     </ul>
   </nav>
 
-  <!-- Dropdown prix (RGAA 7 – rôle menu + aria-label) -->
   <div
     id="dropdown-prix"
     role="menu"
-    aria-label="Options de tri par prix"
-    class="hidden bg-blanc rounded-xl shadow p-3 mb-4 flex flex-col gap-1 text-sm"
+    class="hidden bg-blanc rounded-xl shadow-lg border border-beige p-3 mb-4 flex flex-col gap-2 text-sm w-48"
   >
-    <button role="menuitem" class="text-left hover:text-bordeaux focus:text-bordeaux focus:outline-none transition prix-option" data-sort="asc">
+    <button role="menuitem" class="text-left hover:text-bordeaux transition prix-option" data-sort="asc">
       Prix croissant ↑
     </button>
-    <button role="menuitem" class="text-left hover:text-bordeaux focus:text-bordeaux focus:outline-none transition prix-option" data-sort="desc">
+    <button role="menuitem" class="text-left hover:text-bordeaux transition prix-option" data-sort="desc">
       Prix décroissant ↓
     </button>
   </div>
 
-  <!-- Région live pour annoncer les changements de résultats (RGAA 7) -->
-  <p
-    id="resultat-annonce"
-    role="status"
-    aria-live="polite"
-    aria-atomic="true"
-    class="sr-only"
-  ></p>
-
-  <!-- Liste résultats -->
-  <ul
-    id="resto-list"
-    class="flex flex-col gap-3 list-none p-0 m-0"
-    role="list"
-    aria-label="Liste des restaurants"
+  <div
+    id="dropdown-type"
+    role="menu"
+    class="hidden bg-blanc rounded-xl shadow-lg border border-beige p-3 mb-4 flex flex-wrap gap-2 text-sm"
   >
+    <button
+      class="flex items-center gap-1 border border-vert text-vert rounded-full px-3 py-1 font-medium filter-tag"
+      data-filter="vege"
+      aria-pressed="false"
+    >
+      <span aria-hidden="true">🌿</span> Végétarien
+    </button>
+    <button
+      class="flex items-center gap-1 border border-vert text-vert rounded-full px-3 py-1 font-medium filter-tag"
+      data-filter="halal"
+      aria-pressed="false"
+    >
+      <span aria-hidden="true">☪</span> Halal
+    </button>
+    <button
+      class="flex items-center gap-1 border border-vert text-vert rounded-full px-3 py-1 font-medium filter-tag"
+      data-filter="glutten"
+      aria-pressed="false"
+    >
+      <span aria-hidden="true">🌾</span> Sans gluten
+    </button>
+  </div>
+
+  <p id="resultat-annonce" role="status" aria-live="polite" class="sr-only"></p>
+
+  {/* MODIFICATION : grid-cols-1 (mobile) -> md:grid-cols-2 (tablette) -> lg:grid-cols-3 (PC) */}
+  <ul id="resto-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 list-none p-0 m-0" role="list">
     {restaurants.map((resto) => (
-      <li>
+      <li class="h-full">
+        {/* h-full harmonise la hauteur des cartes sur une même ligne */}
         <article
-          class="flex items-stretch bg-blanc rounded-xl overflow-hidden shadow resto-card"
+          class="flex items-center gap-4 bg-bordeaux text-blanc rounded-2xl p-4 shadow-md resto-card relative h-full"
           data-vege={resto.vege ? 'true' : 'false'}
           data-halal={resto.halal ? 'true' : 'false'}
           data-glutten={resto.glutten ? 'true' : 'false'}
           data-prix={resto.prix_moyen}
-          aria-label={`${resto.nom_restaurants}, ${resto.prix_moyen} €`}
         >
-          <!-- Photo -->
-          <div class="w-28 shrink-0">
-            <img
-              src={`${BASE}/${resto.id}/${resto.images_principale}`}
-              alt={`Photo du restaurant ${resto.nom_restaurants}`}
-              class="w-full h-full object-cover"
+          <div class="w-32 h-24 shrink-0 rounded-xl overflow-hidden shadow-sm">
+            <img 
+              src={`${BASE}/${resto.id}/${resto.images_principale}`} 
+              alt={`Photo du restaurant ${resto.nom_restaurants}`} 
+              class="w-full h-full object-cover" 
               loading="lazy"
-              decoding="async"
             />
           </div>
 
-          <!-- Infos -->
-          <div class="flex-1 p-3 relative">
+          <div class="flex-1 flex flex-col gap-1 pr-8">
+            <h3 class="font-bold text-base text-blanc leading-tight">{resto.nom_restaurants}</h3>
+            <p class="text-sm text-blanc/90">{resto.prix_moyen} €</p>
 
-            <!-- RGAA 7 – bouton favoris avec aria-label et aria-pressed -->
-            <button
-              class="absolute top-2 right-2 focus:outline-2 focus:outline-bordeaux focus:outline-offset-1 rounded fav-btn"
-              aria-label={`${resto.favoris ? 'Retirer' : 'Ajouter'} ${resto.nom_restaurants} ${resto.favoris ? 'des' : 'aux'} favoris`}
-              aria-pressed={resto.favoris ? 'true' : 'false'}
-              data-favoris={resto.favoris ? 'true' : 'false'}
-              data-nom={resto.nom_restaurants}
-            >
-              <svg
-                aria-hidden="true"
-                focusable="false"
-                class="w-5 h-5 transition"
-                fill={resto.favoris ? '#cea563' : 'none'}
-                stroke="#cea563"
-                stroke-width="1.5"
-                viewBox="0 0 24 24"
-              >
-                <path d="M12 .587l3.668 7.431 8.2 1.192-5.934 5.783
-                  1.4 8.164L12 18.896l-7.334 3.861
-                  1.4-8.164L.132 9.21l8.2-1.192z" />
-              </svg>
-            </button>
-
-            <!-- RGAA 9.1 – h3 sous h2 Filtres -->
-            <h3 class="font-semibold text-sm text-noir pr-6">{resto.nom_restaurants}</h3>
-            <p class="text-xs text-or mb-1">Prix moyen : {resto.prix_moyen}&nbsp;€</p>
-
-            <!-- Tags régimes -->
-            <ul
-              class="flex gap-1 mb-1 list-none p-0 m-0"
-              aria-label="Régimes alimentaires disponibles"
-              role="list"
-            >
+            <ul class="flex flex-wrap gap-2 my-1 list-none p-0 m-0" aria-label="Régimes alimentaires" role="list">
               {resto.vege && (
-                <li>
-                  <span class="bg-vert text-blanc text-xs rounded-full px-2 py-0.5">
-                    <span aria-hidden="true">🌿</span>
-                    <span class="sr-only">Végétarien</span>
-                  </span>
+                <li class="w-7 h-7 rounded-full bg-blanc flex items-center justify-center text-sm shadow-sm text-noir">
+                  <span aria-hidden="true">🌿</span>
+                  <span class="sr-only">Végétarien</span>
                 </li>
               )}
               {resto.halal && (
-                <li>
-                  <span class="bg-vert text-blanc text-xs rounded-full px-2 py-0.5">
-                    <span aria-hidden="true">☪</span>
-                    <span class="sr-only">Halal</span>
-                  </span>
+                <li class="w-7 h-7 rounded-full bg-blanc flex items-center justify-center text-sm shadow-sm text-noir">
+                  <span aria-hidden="true">☪</span>
+                  <span class="sr-only">Halal</span>
                 </li>
               )}
               {resto.glutten && (
-                <li>
-                  <span class="bg-vert text-blanc text-xs rounded-full px-2 py-0.5">
-                    <span aria-hidden="true">🌾</span>
-                    <span class="sr-only">Sans gluten</span>
-                  </span>
+                <li class="w-7 h-7 rounded-full bg-blanc flex items-center justify-center text-sm shadow-sm text-noir">
+                  <span aria-hidden="true">🌾</span>
+                  <span class="sr-only">Sans gluten</span>
                 </li>
               )}
             </ul>
 
-            <p class="text-xs text-gris leading-tight">
-              <span class="sr-only">Horaires d'ouverture :</span>
-              <span aria-hidden="true">Horaires :</span>
-              {' '}
-              <time>{resto.horaires_ouvertures}h</time>
-              {' – '}
-              <time>{resto.horaires_fermetures}h</time>
+            <p class="text-xs text-blanc/80 mt-0.5">
+              Horaires : <time>{resto.horaires_ouvertures}h</time> – <time>{resto.horaires_fermetures}h</time>
             </p>
-
           </div>
+
+          <button
+            class="absolute top-4 right-4 focus:outline-2 focus:outline-blanc rounded-full fav-btn p-1 transition"
+            aria-label={`${resto.favoris ? 'Retirer' : 'Ajouter'} ${resto.nom_restaurants} aux favoris`}
+            aria-pressed={resto.favoris ? 'true' : 'false'}
+            data-favoris={resto.favoris ? 'true' : 'false'}
+            data-nom={resto.nom_restaurants}
+          >
+            <svg
+              aria-hidden="true"
+              focusable="false"
+              class="w-6 h-6 transition-colors duration-200"
+              fill={resto.favoris ? '#EAB308' : 'none'}
+              stroke={resto.favoris ? '#EAB308' : '#FFFFFF'}
+              stroke-width="1.5"
+              viewBox="0 0 24 24"
+            >
+              <path d="M12 .587l3.668 7.431 8.2 1.192-5.934 5.783 1.4 8.164L12 18.896l-7.334 3.861 1.4-8.164L.132 9.21l8.2-1.192z" />
+            </svg>
+          </button>
         </article>
       </li>
     ))}
@@ -212,26 +160,36 @@ const restaurants = await getRestaurantsPrixCroissant();
 </section>
 
 <script>
-  // ── Filtres tags (RGAA 7 – aria-pressed) ──────────────────────
+  // --- GESTION DES DROPDOWNS ---
+  const setupDropdown = (btnId: string, menuId: string) => {
+    const btn = document.getElementById(btnId);
+    const menu = document.getElementById(menuId);
+    
+    btn?.addEventListener('click', () => {
+      const isOpen = btn.getAttribute('aria-expanded') === 'true';
+      btn.setAttribute('aria-expanded', String(!isOpen));
+      menu?.classList.toggle('hidden');
+    });
+  };
+
+  setupDropdown('btn-prix', 'dropdown-prix');
+  setupDropdown('btn-type', 'dropdown-type');
+
+  // --- FILTRES DE TYPE ---
   const filterTags = document.querySelectorAll<HTMLButtonElement>('.filter-tag');
   const activeFilters = new Set<string>();
-  const annonce = document.getElementById('resultat-annonce')!;
 
   filterTags.forEach((btn) => {
     btn.addEventListener('click', () => {
       const filter = btn.dataset.filter!;
-      const isActive = activeFilters.has(filter);
-
-      if (isActive) {
+      if (activeFilters.has(filter)) {
         activeFilters.delete(filter);
         btn.setAttribute('aria-pressed', 'false');
         btn.classList.remove('bg-vert', 'text-blanc');
-        btn.classList.add('text-vert');
       } else {
         activeFilters.add(filter);
         btn.setAttribute('aria-pressed', 'true');
         btn.classList.add('bg-vert', 'text-blanc');
-        btn.classList.remove('text-vert');
       }
       applyFilters();
     });
@@ -239,81 +197,55 @@ const restaurants = await getRestaurantsPrixCroissant();
 
   function applyFilters() {
     const cards = document.querySelectorAll<HTMLElement>('.resto-card');
-    let visible = 0;
-
     cards.forEach((card) => {
       const li = card.closest('li')!;
-      if (activeFilters.size === 0) {
-        li.style.display = '';
-        visible++;
-        return;
-      }
       const match = [...activeFilters].every((f) => card.dataset[f] === 'true');
       li.style.display = match ? '' : 'none';
-      if (match) visible++;
     });
-
-    // RGAA 7 – annonce live du nombre de résultats
-    annonce.textContent = `${visible} restaurant${visible > 1 ? 's' : ''} affiché${visible > 1 ? 's' : ''}`;
   }
 
-  // ── Dropdown Prix (RGAA 7 – aria-expanded) ────────────────────
-  const btnPrix = document.getElementById('btn-prix')!;
-  const dropdownPrix = document.getElementById('dropdown-prix')!;
-
-  btnPrix.addEventListener('click', () => {
-    const isOpen = btnPrix.getAttribute('aria-expanded') === 'true';
-    btnPrix.setAttribute('aria-expanded', String(!isOpen));
-    dropdownPrix.classList.toggle('hidden');
-  });
-
-  // Fermer avec Échap (RGAA 7 – gestion clavier)
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') {
-      btnPrix.setAttribute('aria-expanded', 'false');
-      dropdownPrix.classList.add('hidden');
-      btnPrix.focus();
-    }
-  });
-
-  document.querySelectorAll<HTMLButtonElement>('.prix-option').forEach((btn) => {
+  // --- TRI PAR PRIX  ---
+  const prixOptions = document.querySelectorAll<HTMLButtonElement>('.prix-option');
+  prixOptions.forEach((btn) => {
     btn.addEventListener('click', () => {
-      const sort = btn.dataset.sort!;
+      const sortOrder = btn.dataset.sort;
       const list = document.getElementById('resto-list')!;
-      const items = [...list.querySelectorAll<HTMLElement>('li')];
+      const items = Array.from(list.querySelectorAll<HTMLElement>(':scope > li'));
 
       items.sort((a, b) => {
-        const ca = a.querySelector<HTMLElement>('.resto-card')!;
-        const cb = b.querySelector<HTMLElement>('.resto-card')!;
-        const pa = Number(ca.dataset.prix);
-        const pb = Number(cb.dataset.prix);
-        return sort === 'asc' ? pa - pb : pb - pa;
+        const cardA = a.querySelector<HTMLElement>('.resto-card');
+        const cardB = b.querySelector<HTMLElement>('.resto-card');
+        
+        const priceA = cardA ? parseFloat(cardA.dataset.prix!) || 0 : 0;
+        const priceB = cardB ? parseFloat(cardB.dataset.prix!) || 0 : 0;
+        
+        return sortOrder === 'asc' ? priceA - priceB : priceB - priceA;
       });
 
-      items.forEach((i) => list.appendChild(i));
-      btnPrix.setAttribute('aria-expanded', 'false');
-      dropdownPrix.classList.add('hidden');
-      btnPrix.focus();
-
-      // Annonce live
-      annonce.textContent = `Liste triée par prix ${sort === 'asc' ? 'croissant' : 'décroissant'}`;
+      items.forEach(item => list.appendChild(item));
+      
+      document.getElementById('btn-prix')!.setAttribute('aria-expanded', 'false');
+      document.getElementById('dropdown-prix')!.classList.add('hidden');
     });
   });
 
-  // ── Toggle favoris (RGAA 7 – aria-pressed + aria-label dynamique) ──
+  // --- TOGGLE FAVORIS ---
   document.querySelectorAll<HTMLButtonElement>('.fav-btn').forEach((btn) => {
     btn.addEventListener('click', () => {
       const isFav = btn.dataset.favoris === 'true';
-      const nom = btn.dataset.nom!;
+      const nom = btn.dataset.nom;
       const svg = btn.querySelector('svg')!;
 
-      btn.dataset.favoris = isFav ? 'false' : 'true';
-      btn.setAttribute('aria-pressed', isFav ? 'false' : 'true');
+      const nextFavState = !isFav;
+      btn.dataset.favoris = String(nextFavState);
+      btn.setAttribute('aria-pressed', String(nextFavState));
       btn.setAttribute(
         'aria-label',
-        `${isFav ? 'Ajouter' : 'Retirer'} ${nom} ${isFav ? 'aux' : 'des'} favoris`
+        `${nextFavState ? 'Retirer' : 'Ajouter'} ${nom} aux favoris`
       );
-      svg.setAttribute('fill', isFav ? 'none' : '#cea563');
-    
+      
+      svg.setAttribute('fill', nextFavState ? '#EAB308' : 'none');
+      svg.setAttribute('stroke', nextFavState ? '#EAB308' : '#FFFFFF');
     });
   });
+</script>

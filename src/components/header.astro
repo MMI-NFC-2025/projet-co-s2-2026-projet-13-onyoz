@@ -1,0 +1,222 @@
+---
+import "../styles/global.css";
+import Logo from "../assets/icons/logo_P.svg";
+---
+
+<header class="site-header">
+    <div class="header-inner">
+        <a href="/" class="header-logo">
+            <Logo />
+        </a>
+
+        <button class="menu-btn" id="menu-btn" aria-label="menu" aria-expanded="false" aria-controls="mainNav">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+
+        <nav class="main-nav" id="mainNav" aria-hidden="true">
+            <ul>
+                <li><a href="/accueil">Accueil</a></li>
+                <li><a href="/a_propos">À propos d'Onyoz</a></li> 
+                <li><a href="/carte">Carte</a></li>
+                <li><a href="/contact">Contact</a></li>
+                <li class="nav-btn-connect"><a href="/se_connecter">Se connecter</a></li>
+            </ul>
+        </nav>
+    </div>
+</header>
+
+<style>
+.site-header {
+    background-color: var(--color-rouge);
+    position: sticky;
+    top: 0;
+    z-index: 50;
+}
+
+.header-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 1.25rem;
+    height: 4.5rem;
+}
+
+.header-logo {
+    padding: 0.5rem;
+    position: relative;
+    z-index: 50;
+    display: flex;
+    align-items: center;
+}
+
+/* ==========================================
+   STYLE MOBILE & TABLETTE (Par défaut)
+   ========================================== */
+
+/* Bouton hamburger */
+.menu-btn {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 2.5rem;
+    height: 1.85rem;
+    background: none;
+    border: none;
+    cursor: pointer;
+    position: relative;
+    z-index: 50;
+}
+
+.menu-btn span {
+    display: block;
+    height: 5px;
+    width: 100%;
+    background-color: white;
+    border-radius: 9999px;
+    transition: all 0.3s ease;
+}
+
+/* Animation de la croix */
+.menu-btn.is-open span:nth-child(1) { transform: translateY(10px) rotate(45deg); }
+.menu-btn.is-open span:nth-child(2) { opacity: 0; }
+.menu-btn.is-open span:nth-child(3) { transform: translateY(-10px) rotate(-45deg); }
+
+/* Volet mobile plein écran */
+.main-nav {
+    position: fixed;
+    inset: 0;
+    z-index: 40;
+    background-color: var(--color-rouge);
+    padding: 6rem 1.5rem 3rem;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow-y: auto;
+}
+
+.main-nav[aria-hidden="true"] {
+    opacity: 0;
+    visibility: hidden;
+}
+
+.main-nav ul {
+    list-style: none;
+    padding: 0;
+    margin: auto 0;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    width: 100%;
+    max-width: 26rem; 
+}
+
+.main-nav a {
+    display: block;
+    color: white;
+    text-decoration: none;
+    font-family: var(--font-poppins);
+    font-size: 1.35rem;
+    text-align: center;
+    border: 2px solid white;
+    border-radius: 9999px;
+    padding: 0.625rem 2rem;
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.main-nav a:hover {
+    background-color: white;
+    color: var(--color-rouge);
+}
+
+/* Modification de la taille du texte sur tablette */
+@media (min-width: 768px) {
+    .main-nav a { font-size: 1.5rem; }
+    .main-nav ul { gap: 2rem; }
+}
+
+
+/* ==========================================
+   STYLE PC / DESKTOP (Écrans >= 1024px)
+   ========================================== */
+@media (min-width: 1024px) {
+    .header-inner {
+        padding: 0 2.5rem;
+    }
+
+    /* 1. On cache le bouton burger définitivement sur PC */
+    .menu-btn {
+        display: none !important;
+    }
+
+    /* 2. On réinitialise complètement le conteneur <nav> pour l'afficher normalement */
+    .main-nav {
+        position: static;
+        background-color: transparent;
+        padding: 0;
+        display: flex;
+        opacity: 1 !important;
+        visibility: visible !important;
+        overflow: visible;
+    }
+
+    /* 3. La liste passe d'une colonne verticale à une ligne horizontale */
+    .main-nav ul {
+        flex-direction: row;
+        align-items: center;
+        gap: 1rem;
+        max-width: none;
+        margin: 0;
+    }
+
+    /* 4. On retire le style "gros boutons entourés" du mobile pour faire des liens épurés */
+    .main-nav a {
+        font-size: 1rem;
+        border: none;
+        border-radius: 0;
+        padding: 0.5rem 0.75rem;
+        font-weight: 300;
+    }
+
+    .main-nav a:hover {
+        background-color: transparent;
+        color: rgba(255, 255, 255, 0.8);
+        text-decoration: none;
+        opacity: 0.8;
+    }
+
+    /* 5. Style bonus pour transformer le lien "Se connecter" en bouton vert sur PC (comme sur ton ancienne nav) */
+    .main-nav .nav-btn-connect a {
+        font-weight: 700;
+        background-color: var(--color-vert);
+        border-radius: 9999px;
+        padding: 0.5rem 1.5rem;
+        margin-left: 0.5rem;
+        color: white;
+    }
+    
+    .main-nav .nav-btn-connect a:hover {
+        background-color: white;
+        color: var(--color-vert);
+        opacity: 1;
+    }
+}
+</style>
+
+<script>
+    const toggle = document.querySelector("#menu-btn");
+    const nav = document.querySelector("#mainNav");
+    const page = document.body;
+
+    if (toggle && nav) {
+        toggle.addEventListener("click", () => {
+            const isOpen = toggle.getAttribute("aria-expanded") === "true";
+            toggle.setAttribute("aria-expanded", String(!isOpen));
+            nav.setAttribute("aria-hidden", String(isOpen));
+            toggle.classList.toggle("is-open", !isOpen);
+            page.classList.toggle("noscroll", !isOpen);
+        });
+    }
+</script>

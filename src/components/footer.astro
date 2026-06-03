@@ -1,0 +1,42 @@
+---
+import logoFooter from "../assets/icons/logoblanc_oignon.svg";
+import logoInstagram from "../assets/icons/logo-Instagram.svg";
+import logoFacebook from "../assets/icons/facebook.svg";
+import logoTiktok from "../assets/icons/logo TikTok.svg";
+import logoYoutube from "../assets/icons/logo-Youtube.svg";
+---
+
+<footer class="site-footer">
+    <div class="footer-container">
+        
+        <div class="footer-brand">
+            <img src={logoFooter.src} alt="Onyoz" class="footer-logo" />
+        </div>
+
+        <div class="footer-col">
+            <p class="footer-titre">INFOS</p>
+            <ul class="footer-liens">
+                <li><a href="/mentions_legales">Mentions Légales</a></li>
+                <li><a href="/cgu">Conditions D'utilisation</a></li>
+                <li><a href="/contact">Contact</a></li>
+                <li><a href="/a_propos">À Propos</a></li>
+            </ul>
+        </div>
+
+        <div class="footer-col">
+            <p class="footer-titre">SUIVEZ-NOUS</p>
+            <div class="footer-social">
+                <a href="#" aria-label="Instagram"><img src={logoInstagram.src} alt="" /></a>
+                <a href="#" aria-label="Facebook"><img src={logoFacebook.src} alt="" /></a>
+                <a href="#" aria-label="TikTok"><img src={logoTiktok.src} alt="" /></a>
+                <a href="#" aria-label="YouTube"><img src={logoYoutube.src} alt="" /></a>
+            </div>
+        </div>
+
+    </div>
+
+    <p class="footer-disclaimer">
+        Ce site a été réalisé dans le cadre d'un projet universitaire, il est donc
+        fictif. Ne prenez pas les informations de ce site pour vraies.
+    </p>
+</footer>

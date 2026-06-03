@@ -8,104 +8,85 @@ const ids = favorisIds.filter(r => r.favoris).map(r => r.id);
 const favoris = await Promise.all(ids.map(id => getRestaurantById(id)));
 ---
 
-<section aria-labelledby="titre-favoris" class="px-4 py-6">
+<section aria-labelledby="titre-favoris" class="px-4 py-6 max-w-7xl mx-auto w-full">
   <h2 id="titre-favoris" class="text-xl font-bold text-noir mb-4">
     Vos favoris
   </h2>
 
-  <!-- RGAA 9.3 – liste sémantique -->
-  <ul class="grid grid-cols-2 gap-3 list-none p-0 m-0" role="list">
+  {/* MODIFICATION : grid-cols-2 (mobile) -> sm:grid-cols-3 (tablette) -> md:grid-cols-4 (PC) */}
+  <ul id="favoris-list" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 list-none p-0 m-0" role="list">
     {favoris.map((resto) => (
-      <li>
+      <li class="h-full">
+        {/* h-full et flex-col pour garder l'alignement vertical propre */}
         <article
-          class="bg-bordeaux rounded-xl overflow-hidden shadow text-blanc"
+          class="bg-bordeaux rounded-2xl overflow-hidden shadow-md text-blanc flex flex-col fav-card relative h-full justify-between"
+          data-id={resto.id}
           aria-label={`Restaurant ${resto.nom_restaurants}, favori`}
         >
           <div class="relative">
-            <!-- RGAA 1.1 – alt descriptif -->
             <img
               src={`${BASE}/${resto.id}/${resto.images_principale}`}
               alt={`Photo du restaurant ${resto.nom_restaurants}`}
-              class="w-full h-24 object-cover"
+              class="w-full h-32 object-cover"
               loading="lazy"
               decoding="async"
             />
-
-            <!-- RGAA 7 – bouton accessible au clavier avec aria-label et aria-pressed -->
             <button
-              class="absolute top-2 right-2 focus:outline-2 focus:outline-blanc focus:outline-offset-1 rounded"
+              class="absolute top-2 right-2 focus:outline-2 focus:outline-blanc focus:outline-offset-1 rounded fav-btn-page"
               aria-label={`Retirer ${resto.nom_restaurants} des favoris`}
               aria-pressed="true"
+              data-nom={resto.nom_restaurants}
             >
-              <!-- Icône décorative (RGAA 1.2) -->
               <svg
                 aria-hidden="true"
                 focusable="false"
-                class="w-5 h-5 fill-or"
+                class="w-6 h-6 drop-shadow"
+                fill="#cea563"
                 viewBox="0 0 24 24"
               >
-                <path d="M12 .587l3.668 7.431 8.2 1.192-5.934 5.783
-                  1.4 8.164L12 18.896l-7.334 3.861
-                  1.4-8.164L.132 9.21l8.2-1.192z" />
+                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01z" />
               </svg>
             </button>
           </div>
 
-          <div class="p-2">
-            <!-- RGAA 9.1 – h3 sous h2 -->
-            <h3 class="font-semibold text-sm">{resto.nom_restaurants}</h3>
-            <p class="text-xs text-or mb-1">
-              <!-- RGAA 3 – info pas uniquement par la couleur : on ajoute le symbole € -->
-              Prix moyen : {resto.prix_moyen};
-            </p>
+          {/* flex-1 force le contenu à s'aligner par le bas uniformément */}
+          <div class="p-3 flex flex-col gap-1 flex-1 justify-between">
+            <div>
+              <h3 class="font-bold text-sm leading-tight mb-0.5">{resto.nom_restaurants}</h3>
+              <p class="text-xs font-semibold text-or">{resto.prix_moyen} €</p>
 
-            <!-- RGAA 3 – les tags sont du texte, pas seulement des icônes -->
-            <ul
-              class="flex gap-1 mb-1 list-none p-0 m-0"
-              aria-label="Régimes alimentaires"
-              role="list"
-            >
-              {resto.vege && (
-                <li>
-                  <span
-                    class="bg-vert text-blanc text-xs rounded-full px-2 py-0.5"
-                    title="Végétarien"
-                  >
-                    <span aria-hidden="true">🌿</span>
-                    <span class="sr-only">Végétarien</span>
-                  </span>
-                </li>
-              )}
-              {resto.halal && (
-                <li>
-                  <span
-                    class="bg-vert text-blanc text-xs rounded-full px-2 py-0.5"
-                    title="Halal"
-                  >
-                    <span aria-hidden="true">☪</span>
-                    <span class="sr-only">Halal</span>
-                  </span>
-                </li>
-              )}
-              {resto.glutten && (
-                <li>
-                  <span
-                    class="bg-vert text-blanc text-xs rounded-full px-2 py-0.5"
-                    title="Sans gluten"
-                  >
-                    <span aria-hidden="true">🌾</span>
-                    <span class="sr-only">Sans gluten</span>
-                  </span>
-                </li>
-              )}
-            </ul>
+              <ul class="flex flex-wrap gap-1 list-none p-0 my-1" aria-label="Régimes alimentaires" role="list">
+                {resto.vege && (
+                  <li>
+                    <span class="inline-flex items-center gap-0.5 bg-vert text-blanc text-[10px] rounded-full px-2 py-0.5" title="Végétarien">
+                      <span aria-hidden="true">🌿</span>
+                      <span class="sr-only">Végétarien</span>
+                    </span>
+                  </li>
+                )}
+                {resto.halal && (
+                  <li>
+                    <span class="inline-flex items-center gap-0.5 bg-vert text-blanc text-[10px] rounded-full px-2 py-0.5" title="Halal">
+                      <span aria-hidden="true">☪</span>
+                      <span class="sr-only">Halal</span>
+                    </span>
+                  </li>
+                )}
+                {resto.glutten && (
+                  <li>
+                    <span class="inline-flex items-center gap-0.5 bg-vert text-blanc text-[10px] rounded-full px-2 py-0.5" title="Sans gluten">
+                      <span aria-hidden="true">🌾</span>
+                      <span class="sr-only">Sans gluten</span>
+                    </span>
+                  </li>
+                )}
+              </ul>
+            </div>
 
-            <p class="text-xs text-blanc/80 leading-tight">
+            <p class="text-[10px] text-blanc/80 leading-snug mt-auto">
               <span class="sr-only">Horaires d'ouverture :</span>
-              <span aria-hidden="true">Horaires :</span>
-              {/* RGAA 11 – horaire lisible pour les lecteurs d'écran */}
-              <time>{resto.horaires_ouvertures}h</time>
-              {' – '}
+              <span aria-hidden="true">Horaires :</span>{' '}
+              <time>{resto.horaires_ouvertures}h</time>{' – '}
               <time>{resto.horaires_fermetures}h</time>
             </p>
           </div>
@@ -114,3 +95,41 @@ const favoris = await Promise.all(ids.map(id => getRestaurantById(id)));
     ))}
   </ul>
 </section>
+
+<script>
+  const BASE_URL = 'http://pbonyoz.lucie-garcia.fr/api/collections/pbc_1567773776/records';
+
+  // 1. Écouter les changements en provenance du composant Filtres
+  window.addEventListener('favori-changed', (e: any) => {
+    const { id, isFav } = e.detail;
+    const card = document.querySelector(`.fav-card[data-id="${id}"]`);
+    
+    if (card && !isFav) {
+      card.closest('li')?.remove();
+    }
+  });
+
+  // 2. Gérer le clic sur l'étoile directement depuis la section favoris
+  document.querySelectorAll('.fav-btn-page').forEach((btn) => {
+    btn.addEventListener('click', async () => {
+      const card = btn.closest('.fav-card') as HTMLElement;
+      const id = card?.dataset.id;
+      const li = card?.closest('li');
+
+      if (id) {
+        try {
+          await fetch(`${BASE_URL}/${id}`, {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ favoris: false })
+          });
+
+          window.dispatchEvent(new CustomEvent('favori-changed', { detail: { id, isFav: false } }));
+          li?.remove();
+        } catch (error) {
+          console.error("Erreur lors de la suppression du favori :", error);
+        }
+      }
+    });
+  });
+</script>

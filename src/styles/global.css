@@ -1,0 +1,140 @@
+@import "tailwindcss";
+
+@source "../components/**/*.astro";
+@source "../components/accueil/**/*.astro";
+@source "../pages/**/*.astro";
+@source "../layouts/**/*.astro";
+
+@theme {
+    --color-noir: #000000;
+    --color-bordeaux: #5c181a;
+    --color-rouge: #88272a;
+    --color-or: #cea563;
+    --color-gris: #5b4f4b;
+    --color-blanc: #ffffff;
+    --color-vert: #85ae34;
+    --color-beige: #e8e4e3;
+
+    --font-sans: "Poppins", sans-serif;
+    --font-kodchasan: "Kodchasan", sans-serif;
+    --font-poppins: "Poppins", sans-serif;
+
+
+    --my-grid: repeat(12, minmax(0, 88px));
+}
+
+.grid-custom {
+    display: grid;
+    column-gap: 20px;
+    justify-content: center;
+    position: absolute;
+    top: 0;
+    grid-template-columns: var(--my-grid);
+}
+
+@layer base {
+    body {
+        font-family: var(--font-poppins);
+        background-color: var(--color-beige);
+    }
+}
+
+.site-footer {
+    background-color: var(--color-rouge);
+    color: var(--color-blanc);
+    padding: 2.5rem 1.5rem;
+}
+
+/* Conteneur principal qui gère l'alignement */
+.footer-container {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    margin-bottom: 2rem;
+}
+
+.footer-logo {
+    height: 4rem;
+}
+
+.footer-titre {
+    font-weight: 700;
+    margin-bottom: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.footer-liens {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+}
+
+.footer-liens a {
+    color: var(--color-blanc);
+    text-decoration: none;
+    opacity: 0.9;
+    transition: opacity 0.2s ease, text-decoration 0.2s ease;
+}
+
+.footer-liens a:hover {
+    opacity: 1;
+    text-decoration: underline;
+}
+
+.footer-social {
+    display: flex;
+    gap: 1.5rem;
+}
+
+.footer-social img {
+    height: 2rem;
+    transition: transform 0.2s ease;
+}
+
+.footer-social a:hover img {
+    transform: scale(1.1); /* Petit effet de survol sympa sur les réseaux */
+}
+
+.footer-disclaimer {
+    font-size: 0.75rem;
+    text-align: center;
+    opacity: 0.7;
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+    padding-top: 1.5rem;
+    line-height: 1.4;
+}
+
+@media (min-width: 1024px) {
+    .site-footer {
+        padding: 4rem 2rem 2rem;
+    }
+
+    /* Sur PC, on aligne le logo, les infos et les réseaux côte à côte */
+    .footer-container {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: flex-start;
+        max-width: 80rem; /* Aligné sur le max-w-7xl de tes sections */
+        margin-left: auto;
+        margin-right: auto;
+        gap: 4rem;
+    }
+
+    .footer-brand {
+        flex: 2; /* Laisse plus d'espace pour le logo */
+    }
+
+    .footer-col {
+        flex: 1; /* Aligne proprement les blocs de listes */
+    }
+
+    .footer-disclaimer {
+        max-width: 80rem;
+        margin-left: auto;
+        margin-right: auto;
+    }
+}

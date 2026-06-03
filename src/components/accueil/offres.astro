@@ -6,23 +6,22 @@ const offres = await getImagesPrincipales();
 const affichees = offres.slice(0, 2);
 ---
 
-<!-- Landmark section avec titre — RGAA 9.1 -->
-<section aria-labelledby="offres-titre" class="px-4 py-6">
+<section aria-labelledby="offres-titre" class="px-4 py-6 max-w-7xl mx-auto w-full">
 
   <h2 id="offres-titre" class="text-xl font-bold text-noir mb-4">
     Les offres du moment
   </h2>
 
-  <ul class="grid grid-cols-2 gap-3 list-none p-0" role="list">
+  {/* MODIFICATION : grid-cols-2 (mobile) -> md:grid-cols-4 (PC) pour éviter que les 2 seules offres s'étirent trop */}
+  <ul class="grid grid-cols-2 md:grid-cols-4 gap-4 list-none p-0" role="list">
     {affichees.map((resto) => (
       <li>
         <article aria-label={`Offre : ${resto.nom_restaurants}`}>
-          <div class="rounded-xl overflow-hidden shadow">
-            <!-- alt descriptif — RGAA 1.1 -->
+          <div class="rounded-xl overflow-hidden shadow transition hover:shadow-md">
             <img
               src={`${BASE}/${resto.id}/${resto.images_principale}`}
               alt={`Devanture de ${resto.nom_restaurants}`}
-              class="w-full h-28 object-cover"
+              class="w-full h-32 md:h-40 object-cover" 
               loading="lazy"
             />
           </div>

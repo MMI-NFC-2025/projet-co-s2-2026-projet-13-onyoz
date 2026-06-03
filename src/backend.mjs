@@ -25,7 +25,7 @@ export async function getNomsRestaurants() {
 
 export async function getImagesPrincipales() {
     const records = await pb.collection('restaurants').getFullList({
-        fields: 'nom_restaurants, images_principale'
+        fields: 'id, nom_restaurants, images_principale'
     });
     return records;
 }

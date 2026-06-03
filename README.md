@@ -2,13 +2,13 @@
 
 Éléménts à renseigner pour la soutenance :
 
-- [ ] Nom du projet :
-- [ ] URL de la landing page :
+- [ ] Nom du projet : Onyoz
+- [ ] URL de la landing page : 
 - [ ] URL de l'application finale :
-- [ ] URL de connexion au back office :
+- [ ] URL de connexion au back office : 
 - [ ] Identifiant de connexion au backoffice :
 - [ ] Mot de passe de connexion au backoffice :
-- [ ] URL de la maquette FIGMA :
+- [ ] URL de la maquette FIGMA : 
 - [ ] Description du projet :
 
 ## 🚀 Équipe
