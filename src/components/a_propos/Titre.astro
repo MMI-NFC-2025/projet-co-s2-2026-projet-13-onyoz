@@ -1,0 +1,25 @@
+---
+import ellipse from "../../assets/Group 22(1).svg";
+import demi_oignon_gauche from "../../assets/a_propos/demi_oignon_gauche.svg";
+import demi_oignon_droite from "../../assets/a_propos/demi_oignon_droit.svg";
+---
+
+<section class="relative bg-beige px-6 pt-16 pb-6 overflow-hidden">
+    <!-- Cercles -->
+    <img
+        src={ellipse.src}
+        aria-hidden="true"
+        class="absolute -top-16 -left-16 w-72 opacity-40 pointer-events-none select-none"
+    />
+
+    <!-- Titre -->
+    <div class="relative z-10 flex items-center justify-center gap-3">
+        <img src={demi_oignon_gauche.src} />
+        
+        <h1 class="font-kodchasan font-bold text-4xl md:text-5xl text-noir mx-3">
+            Qui sommes-nous?
+        </h1>
+        <img src={demi_oignon_droite.src} />
+        
+    </div>
+</section>

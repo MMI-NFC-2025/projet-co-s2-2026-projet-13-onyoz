@@ -1,16 +1,23 @@
 @import "tailwindcss";
-@import url("https://fonts.googleapis.com/css2?family=Kodchasan:wght@400;700&family=Poppins:wght@400;700&display=swap");
+@source "../components/**/*.astro";
+@source "../components/landing_page/**/*.astro";
+@source "../pages/**/*.astro";
+@source "../layouts/**/*.astro";
 
 @theme {
+    --color-noir: #000000;
+    --color-bordeaux: #5c181a;
     --color-rouge: #88272a;
-    /* #1d096b */
-    --color-vert: #85ae34;
+    --color-or: #cea563;
+    --color-gris: #5b4f4b;
     --color-blanc: #ffffff;
-    /* #feaa9b */
+    --color-vert: #85ae34;
+    --color-beige: #e8e4e3;
 
-    --font-sans: "Inter Variable", sans-serif;
+    --font-sans: "Poppins", sans-serif;
     --font-kodchasan: "Kodchasan", sans-serif;
     --font-poppins: "Poppins", sans-serif;
+
 
     --my-grid: repeat(12, minmax(0, 88px));
 }
@@ -22,4 +29,11 @@
     position: absolute;
     top: 0;
     grid-template-columns: var(--my-grid);
+}
+
+@layer base {
+    body {
+        font-family: var(--font-poppins);
+        background-color: var(--color-beige);
+    }
 }

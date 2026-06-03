@@ -1,0 +1,29 @@
+---
+import map from "../assets/landing_page/map.avif";
+import LogoTxt from "../assets/icons/logo_block(1).svg";
+---
+
+<section
+    class="relative min-h-[90vh] flex items-center overflow-hidden pb-[18%] bg-beige"
+>
+    <img
+        src={map.src}
+        alt=""
+        aria-hidden="true"
+        class="absolute bottom-0 left-0 w-full object-cover object-bottom"
+    />
+    <div class="relative z-10 w-full flex flex-col items-start px-8 lg:px-16">
+        <LogoTxt class="w-[50vw] max-w-4xl -mb-15 block" />
+        <p class="text-blanc font-poppins italic text-[36px] mb-10 ml-[40%]">
+            On épluche les bons plans pour vous !
+        </p>
+        <div class="w-full flex justify-end">
+            <a
+                href="/carte"
+                class="inline-flex items-center gap-3 bg-vert text-blanc font-poppins font-semibold text-base lg:text-lg px-8 py-4 rounded-full hover:opacity-90 transition-opacity"
+            >
+                <span aria-hidden="true">→</span> Allons y !
+            </a>
+        </div>
+    </div>
+</section>

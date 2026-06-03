@@ -1,0 +1,48 @@
+---
+import grosOignon from "../../assets/gors nonion(1).svg";
+const { onSubmit = "#" } = Astro.props;
+---
+
+<section class="relative bg-beige px-6 pb-20 overflow-hidden">
+  <!-- Cercles décoratifs bas-gauche -->
+  <img
+    src={grosOignon.src}
+    aria-hidden="true"
+    class="absolute -bottom-20 -left-20 w-72 opacity-30 pointer-events-none select-none"
+  />
+  <form action={onSubmit} class="relative z-10 mx-auto max-w-4xl">
+    <div class="grid gap-4 md:grid-cols-2">
+      <div>
+        <label class="mb-2 block font-kodchasan text-xl text-noir" for="nom">Nom</label>
+        <input id="nom" type="text" placeholder="Ex : Meyer" class="w-full rounded-sm border border-rouge/40 bg-beige px-4 py-2 outline-none placeholder:italic placeholder:text-gris/50 focus:border-vert" />
+      </div>
+
+      <div>
+        <label class="mb-2 block font-kodchasan text-xl text-noir" for="prenom">Prénom</label>
+        <input id="prenom" type="text" placeholder="Ex : Emma" class="w-full rounded-sm border border-rouge/40 bg-beige px-4 py-2 outline-none placeholder:italic placeholder:text-gris/50 focus:border-vert" />
+      </div>
+    </div>
+
+    <div class="mt-4">
+      <label class="mb-2 block font-kodchasan text-xl text-noir" for="email">Email</label>
+      <input id="email" type="email" placeholder="Ex : emma.meyer@gmail.com" class="w-full rounded-sm border border-rouge/40 bg-beige px-4 py-2 outline-none placeholder:italic placeholder:text-gris/50 focus:border-vert" />
+    </div>
+
+    <div class="mt-4">
+      <label class="mb-2 block font-kodchasan text-xl text-noir" for="objet">Objet</label>
+      <input id="objet" type="text" placeholder="Ex : Informations erronés" class="w-full rounded-sm border border-rouge/40 bg-beige px-4 py-2 outline-none placeholder:italic placeholder:text-gris/50 focus:border-vert" />
+    </div>
+
+    <div class="mt-4">
+      <label class="mb-2 block font-kodchasan text-xl text-noir" for="message">Message</label>
+      <textarea id="message" rows="7" placeholder="Écrivez votre message ici.." class="w-full rounded-sm border border-rouge/40 bg-beige px-4 py-3 outline-none placeholder:italic placeholder:text-gris/50 focus:border-vert"></textarea>
+    </div>
+
+    <div class="mt-8 flex justify-center">
+      <button type="submit" class="inline-flex items-center gap-3 rounded-sm bg-vert px-8 py-3 font-kodchasan text-xl text-white shadow-sm transition hover:brightness-95">
+        <span aria-hidden="true">→</span>
+        Envoyer
+      </button>
+    </div>
+  </form>
+</section>

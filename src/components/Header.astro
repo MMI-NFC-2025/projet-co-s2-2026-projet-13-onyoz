@@ -1,7 +1,7 @@
 ---
 import "../styles/global.css";
-import Logo from "../assets/icons/logo_blanc.svg";
-import Txtlogo from "../assets/icons/logo_txt.svg";
+import Logo from "../assets/icons/logo_header.svg";
+import Txtlogo from "../assets/icons/logo_header.svg";
 ---
 
 <header class="bg-rouge z-50 sticky top-0">
@@ -10,9 +10,9 @@ import Txtlogo from "../assets/icons/logo_txt.svg";
             <Logo class="lg:hidden" />
             <Txtlogo class="hidden lg:block w-30" />
         </a>
-        <div class="p-5">
+        <div class="lg:hidden p-5">
             <button
-                class={`group *:ease relative z-20 flex h-9 w-12 flex-col justify-between *:h-[6px]  *:w-full *:bg-white *:transition-all *:duration-300 lg:hidden`}
+                class={`group *:ease relative z-20 flex h-9 w-12 flex-col justify-between *:h-[6px]  *:w-full *:bg-white *:transition-all *:duration-300`}
                 id="menu-btn"
                 aria-label="menu"
                 aria-expanded="false"
@@ -30,7 +30,7 @@ import Txtlogo from "../assets/icons/logo_txt.svg";
             </button>
             <nav
                 id="menu"
-                class={`visible fixed inset-0 z-10 text-white  group opacity-100 transition-all duration-300 ease-in-out before:fixed before:inset-0 before:z-9 before:translate-y-0 before:bg-rouge before:transition aria-hidden:before:-translate-y-full max-lg:space-y-12 max-lg:p-10 max-lg:aria-hidden:invisible max-lg:aria-hidden:opacity-0 lg:relative lg:flex lg:flex-1 lg:items-center lg:justify-between lg:bg-transparent lg:text-base lg:font-bold lg:tracking-wide lg:opacity-100 `}
+                class={`visible fixed inset-0 z-10 text-blanc  group opacity-100 transition-all duration-300 ease-in-out before:fixed before:inset-0 before:z-9 before:translate-y-0 before:bg-rouge before:transition aria-hidden:before:-translate-y-full max-lg:space-y-12 max-lg:p-10 max-lg:aria-hidden:invisible max-lg:aria-hidden:opacity-0 lg:relative lg:flex lg:flex-1 lg:items-center lg:justify-between lg:bg-transparent lg:text-base lg:font-bold lg:tracking-wide lg:opacity-100 `}
                 aria-hidden="true"
             >
                 <ul
@@ -39,32 +39,39 @@ import Txtlogo from "../assets/icons/logo_txt.svg";
                     <li
                         class="delay-50 font-poppins font-light flex justify-center max-lg:ring-2 max-lg:ring-white rounded-3xl p-2.5 mx-8 max-lg:my-8"
                     >
-                        <a href="accueil">Accueil</a>
+                        <a href="/accueil">Accueil</a>
                     </li>
                     <li
                         class="delay-100 font-poppins font-light flex justify-center max-lg:ring-2 max-lg:ring-white rounded-3xl p-2.5 mx-8 max-lg:my-8"
                     >
-                        <a href="../pages/a-propos.astro"> A propos d’Onyoz</a>
+                        <a href="/a_propos"> A propos d'Onyoz</a>
                     </li>
 
                     <li
                         class="delay-150 font-poppins font-light flex justify-center max-lg:ring-2 max-lg:ring-white rounded-3xl p-2.5 mx-8 max-lg:my-8"
                     >
-                        <a href="../pages/carte.astro">Carte</a>
+                        <a href="/carte">Carte</a>
                     </li>
                     <li
                         class="delay-200 font-poppins font-light flex justify-center max-lg:ring-2 max-lg:ring-white rounded-3xl p-2.5 mx-8 max-lg:my-8"
                     >
-                        <a href="../pages/contact.astro">Contact</a>
+                        <a href="/contact">Contact</a>
                     </li>
                     <li
                         class="delay-250 font-poppins font-light flex justify-center max-lg:ring-2 max-lg:ring-white rounded-3xl p-2.5 mx-8 max-lg:my-8"
                     >
-                        <a href="../pages/se-connecter.astro">Se connecter</a>
+                        <a href="/se-connecter">Se connecter</a>
                     </li>
                 </ul>
             </nav>
         </div>
+
+        <!-- Desktop nav -->
+        <nav class="hidden lg:flex items-center gap-1 mr-4">
+            <a href="/contact" class="font-poppins font-light text-blanc px-3 py-2 hover:opacity-80 transition-opacity">Contact</a>
+            <a href="/a_propos" class="font-poppins font-light text-blanc px-3 py-2 hover:opacity-80 transition-opacity">À propos</a>
+            <a href="/carte" class="font-poppins font-bold text-blanc bg-vert rounded-full px-6 py-2 ml-2 hover:opacity-90 transition-opacity">Découvrir</a>
+        </nav>
     </div>
 </header>
 <script>
