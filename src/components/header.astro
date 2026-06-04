@@ -276,57 +276,64 @@ import Logo from "../assets/icons/logo_P.svg";
 }
 </style>
 
-<script type="module">
-    const toggle = document.getElementById("menu-btn");
-    const nav = document.getElementById("mainNav");
-    const page = document.body;
-    const desktopWidth = 1024;
+<script is:inline>
+    (function () {
+        var toggle = document.getElementById("menu-btn");
+        var nav = document.getElementById("mainNav");
+        var page = document.body;
+        var desktopWidth = 1024;
 
-    function closeMenu() {
-        if (!toggle || !nav) return;
-        toggle.setAttribute("aria-expanded", "false");
-        toggle.setAttribute("aria-label", "Ouvrir le menu principal");
-        nav.setAttribute("aria-hidden", "true");
-        toggle.classList.remove("is-open");
-        page.classList.remove("noscroll");
-    }
+        if (!toggle || !nav || !page) {
+            return;
+        }
 
-    if (toggle && nav) {
         function setMenuState(open) {
             toggle.setAttribute("aria-expanded", String(open));
             toggle.setAttribute("aria-label", open ? "Fermer le menu principal" : "Ouvrir le menu principal");
             nav.setAttribute("aria-hidden", String(!open));
             toggle.classList.toggle("is-open", open);
-            page.classList.toggle("noscroll", open && window.innerWidth < desktopWidth);
+
+            if (open && window.innerWidth < desktopWidth) {
+                page.classList.add("noscroll");
+            } else {
+                page.classList.remove("noscroll");
+            }
         }
 
-        toggle.addEventListener("click", () => {
-            const isOpen = toggle.getAttribute("aria-expanded") === "true";
+        function closeMenu() {
+            setMenuState(false);
+        }
+
+        toggle.addEventListener("click", function () {
+            var isOpen = toggle.getAttribute("aria-expanded") === "true";
             setMenuState(!isOpen);
         });
 
-        nav.querySelectorAll("a").forEach((link) => {
-            link.addEventListener("click", () => {
+        var links = nav.querySelectorAll("a");
+        links.forEach(function (link) {
+            link.addEventListener("click", function () {
                 if (window.innerWidth < desktopWidth) {
-                    setMenuState(false);
+                    closeMenu();
                 }
             });
         });
 
-        document.addEventListener("keydown", (event) => {
+        document.addEventListener("keydown", function (event) {
             if (event.key === "Escape") {
                 closeMenu();
                 toggle.focus();
             }
         });
 
-        window.addEventListener("resize", () => {
+        window.addEventListener("resize", function () {
             if (window.innerWidth >= desktopWidth) {
                 closeMenu();
             }
         });
-    }
+    })();
+</script>
 
+<script type="module">
     async function initAuthNavigation() {
         const navAuthStatus = document.getElementById("nav-auth-status");
         const navAuthLabel = document.getElementById("nav-auth-label");
@@ -338,6 +345,7 @@ import Logo from "../assets/icons/logo_P.svg";
         try {
             const { default: PocketBase } = await import("pocketbase");
             const pb = new PocketBase("/pb");
+            const desktopWidth = 1024;
             pb.autoCancellation(false);
 
             function getAccountLabel() {
@@ -345,12 +353,21 @@ import Logo from "../assets/icons/logo_P.svg";
                 return model?.name || model?.username || model?.email || "Mon compte";
             }
 
+            function setHidden(el, hidden) {
+                if (!el) return;
+                if (hidden) {
+                    el.setAttribute("hidden", "");
+                } else {
+                    el.removeAttribute("hidden");
+                }
+            }
+
             function syncAuthNavigation() {
                 const isConnected = pb.authStore.isValid;
-                navAuthStatus?.toggleAttribute("hidden", !isConnected);
-                navLoginItem?.toggleAttribute("hidden", isConnected);
-                navAccountItem?.toggleAttribute("hidden", !isConnected);
-                navLogoutItem?.toggleAttribute("hidden", !isConnected);
+                setHidden(navAuthStatus, !isConnected);
+                setHidden(navLoginItem, isConnected);
+                setHidden(navAccountItem, !isConnected);
+                setHidden(navLogoutItem, !isConnected);
 
                 if (navAuthLabel) {
                     navAuthLabel.textContent = isConnected ? `Connecte: ${getAccountLabel()}` : "Non connecte";
@@ -367,7 +384,15 @@ import Logo from "../assets/icons/logo_P.svg";
                 syncAuthNavigation();
 
                 if (window.innerWidth < desktopWidth) {
-                    closeMenu();
+                    const toggle = document.getElementById("menu-btn");
+                    const nav = document.getElementById("mainNav");
+                    if (toggle && nav) {
+                        toggle.setAttribute("aria-expanded", "false");
+                        toggle.setAttribute("aria-label", "Ouvrir le menu principal");
+                        nav.setAttribute("aria-hidden", "true");
+                        toggle.classList.remove("is-open");
+                        document.body.classList.remove("noscroll");
+                    }
                 }
 
                 if (window.location.pathname === "/se_connecter") {
@@ -375,7 +400,6 @@ import Logo from "../assets/icons/logo_P.svg";
                 }
             });
         } catch (error) {
-            // L'auth ne doit jamais bloquer le fonctionnement du menu principal.
             console.error("Navigation auth indisponible", error);
         }
     }
