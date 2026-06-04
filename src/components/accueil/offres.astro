@@ -1,0 +1,37 @@
+---
+import { getImagesPrincipales } from '../../backend.mjs';
+
+const BASE = import.meta.env.DEV
+  ? 'http://pbonyoz.lucie-garcia.fr/api/files/pbc_1567773776'
+  : '/pb/api/files/pbc_1567773776';
+const offres = await getImagesPrincipales();
+const affichees = offres.slice(0, 2);
+---
+
+<section aria-labelledby="offres-titre" class="px-4 py-6 max-w-7xl mx-auto w-full">
+
+  <h2 id="offres-titre" class="text-xl font-bold text-noir mb-4">
+    Les offres du moment
+  </h2>
+
+  {/* MODIFICATION : grid-cols-2 (mobile) -> md:grid-cols-4 (PC) pour éviter que les 2 seules offres s'étirent trop */}
+  <ul class="grid grid-cols-2 md:grid-cols-4 gap-4 list-none p-0" role="list">
+    {affichees.map((resto) => (
+      <li>
+        <a href={`/resto/${resto.id}`} class="block" aria-label={`Voir la fiche du restaurant ${resto.nom_restaurants}`}>
+          <article aria-label={`Offre : ${resto.nom_restaurants}`}>
+            <div class="rounded-xl overflow-hidden shadow transition hover:shadow-md">
+              <img
+                src={`${BASE}/${resto.id}/${resto.images_principale}`}
+                alt={`Devanture de ${resto.nom_restaurants}`}
+                class="w-full h-32 md:h-40 object-cover" 
+                loading="lazy"
+              />
+            </div>
+          </article>
+        </a>
+      </li>
+    ))}
+  </ul>
+
+</section>

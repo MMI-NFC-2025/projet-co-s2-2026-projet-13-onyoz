@@ -1,0 +1,29 @@
+---
+// src/components/map/resto.astro
+const { resto } = Astro.props;
+
+// La même base que les autres cartes resto, compatible dev et prod
+const BASE = import.meta.env.DEV
+  ? 'http://pbonyoz.lucie-garcia.fr/api/files/pbc_1567773776'
+  : '/pb/api/files/pbc_1567773776';
+
+// On vérifie que 'resto' existe avant de lire ses propriétés
+if (!resto) return null;
+---
+
+<a href={`/resto/${resto.id}`} class="block" aria-label={`Voir la fiche du restaurant ${resto.nom_restaurants}`}>
+  <article class="bg-bordeaux p-4 rounded-xl shadow-lg border border-bordeaux/20 text-white w-full">
+    <div class="rounded-xl overflow-hidden mb-3">
+      <img
+        src={`${BASE}/${resto.id}/${resto.images_principale}`}
+        alt={`Devanture de ${resto.nom_restaurants}`}
+        class="w-full h-40 object-cover" 
+        loading="lazy"
+      />
+    </div>
+
+    <h3 class="font-bold text-lg">{resto.nom_restaurants}</h3>
+    <p class="text-sm opacity-90">Prix moyen : {resto.prix_moyen} €</p>
+    <p class="text-xs italic">Horaires : {resto.horaires_ouvertures}h – {resto.horaires_fermetures}h</p>
+  </article>
+</a>

@@ -1,0 +1,46 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import RestoDetailContent from '../../components/pages/RestoDetailContent.astro';
+import { getRestaurantById, getAvisByRestaurantId, getRestaurantsPrixCroissant } from '../../backend.mjs';
+
+export async function getStaticPaths() {
+  try {
+    const restaurants = await getRestaurantsPrixCroissant();
+    return restaurants.map((restaurant) => ({
+      params: { id: restaurant.id },
+    }));
+  } catch (error) {
+    console.error('Impossible de generer les pages /resto/[id]:', error);
+    return [];
+  }
+}
+
+const { id } = Astro.params;
+let resto = null;
+const avis: Array<{ [key: string]: unknown }> = [];
+
+try {
+  resto = await getRestaurantById(id);
+} catch (error) {
+  console.error(`Restaurant introuvable pour id ${id}:`, error);
+}
+
+if (resto) {
+  try {
+    const fetchedAvis = await getAvisByRestaurantId(id);
+    if (Array.isArray(fetchedAvis)) {
+      avis.push(...(fetchedAvis as Array<{ [key: string]: unknown }>));
+    }
+  } catch (error) {
+    console.error(`Impossible de charger les avis pour id ${id}:`, error);
+  }
+}
+---
+
+<Layout title={resto ? `${resto.nom_restaurants} - Onyoz` : 'Restaurant introuvable - Onyoz'}>
+  <main class="min-h-screen bg-neutral-200 px-4 py-6 lg:py-10">
+    <section class="w-full max-w-6xl mx-auto text-neutral-900">
+      <RestoDetailContent resto={resto} avis={avis} />
+    </section>
+  </main>
+</Layout>

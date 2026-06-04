@@ -1,0 +1,144 @@
+---
+import { getRestaurantById, getRestaurantsFavoris } from '../../backend.mjs';
+
+const BASE = import.meta.env.DEV
+  ? 'http://pbonyoz.lucie-garcia.fr/api/files/pbc_1567773776'
+  : '/pb/api/files/pbc_1567773776';
+
+const favorisIds = await getRestaurantsFavoris();
+const ids = favorisIds.filter(r => r.favoris).map(r => r.id);
+const favoris = await Promise.all(ids.map(id => getRestaurantById(id)));
+---
+
+<section aria-labelledby="titre-favoris" class="px-4 py-6 max-w-7xl mx-auto w-full">
+  <h2 id="titre-favoris" class="text-xl font-bold text-noir mb-4">
+    Vos favoris
+  </h2>
+
+  {/* Responsive: 1 col sur petits mobiles, puis 2 et 4 colonnes */}
+  <ul id="favoris-list" class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 list-none p-0 m-0" role="list">
+    {favoris.map((resto) => (
+      <li class="h-full">
+        {/* h-full et flex-col pour garder l'alignement vertical propre */}
+        <article
+          class="bg-bordeaux rounded-2xl overflow-hidden shadow-md text-blanc flex flex-col fav-card relative h-full justify-between"
+          data-id={resto.id}
+          aria-label={`Restaurant ${resto.nom_restaurants}, favori`}
+        >
+          <div class="relative">
+            <img
+              src={`${BASE}/${resto.id}/${resto.images_principale}`}
+              alt={`Photo du restaurant ${resto.nom_restaurants}`}
+              class="w-full h-36 object-cover"
+              loading="lazy"
+              decoding="async"
+            />
+            <button
+              class="absolute top-2 right-2 focus:outline-2 focus:outline-blanc focus:outline-offset-1 rounded fav-btn-page"
+              aria-label={`Retirer ${resto.nom_restaurants} des favoris`}
+              aria-pressed="true"
+              data-nom={resto.nom_restaurants}
+            >
+              <svg
+                aria-hidden="true"
+                focusable="false"
+                class="w-6 h-6 drop-shadow"
+                fill="var(--color-or)"
+                viewBox="0 0 24 24"
+              >
+                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01z" />
+              </svg>
+            </button>
+          </div>
+
+          {/* flex-1 force le contenu à s'aligner par le bas uniformément */}
+          <div class="p-3 flex flex-col gap-1 flex-1 justify-between">
+            <div>
+              <h3 class="font-bold text-sm leading-tight mb-0.5">
+                <a href={`/resto/${resto.id}`} class="underline-offset-2 hover:underline focus:underline">{resto.nom_restaurants}</a>
+              </h3>
+              <p class="text-xs font-semibold text-or">{resto.prix_moyen} €</p>
+
+              <ul class="flex flex-wrap gap-1 list-none p-0 my-1" aria-label="Régimes alimentaires" role="list">
+                {resto.vege && (
+                  <li>
+                    <span class="theme-tag" title="Végétarien">
+                      <span aria-hidden="true">🌿</span>
+                      <span class="sr-only">Végétarien</span>
+                    </span>
+                  </li>
+                )}
+                {resto.halal && (
+                  <li>
+                    <span class="theme-tag" title="Halal">
+                      <span aria-hidden="true">☪</span>
+                      <span class="sr-only">Halal</span>
+                    </span>
+                  </li>
+                )}
+                {resto.glutten && (
+                  <li>
+                    <span class="theme-tag" title="Sans gluten">
+                      <span aria-hidden="true">🌾</span>
+                      <span class="sr-only">Sans gluten</span>
+                    </span>
+                  </li>
+                )}
+              </ul>
+            </div>
+
+            <p class="theme-text-muted-on-dark text-xs leading-snug mt-auto">
+              <span class="sr-only">Horaires d'ouverture :</span>
+              <span aria-hidden="true">Horaires :</span>{' '}
+              <time>{resto.horaires_ouvertures}h</time>{' – '}
+              <time>{resto.horaires_fermetures}h</time>
+            </p>
+
+            <a href={`/resto/${resto.id}`} class="theme-link-small mt-1 w-fit">Voir la fiche</a>
+          </div>
+        </article>
+      </li>
+    ))}
+  </ul>
+</section>
+
+<script>
+  const BASE_URL = '/pb/api/collections/pbc_1567773776/records';
+
+  window.addEventListener('favori-changed', (event) => {
+    const detail = event.detail || {};
+    const id = detail.id;
+    const isFav = detail.isFav;
+    const card = document.querySelector(`.fav-card[data-id="${id}"]`);
+    
+    if (card && !isFav) {
+      card.closest('li')?.remove();
+    }
+  });
+
+  document.querySelectorAll('.fav-btn-page').forEach((btn) => {
+    btn.addEventListener('click', async (event) => {
+      event.stopPropagation();
+
+      const card = btn.closest('.fav-card');
+      const id = card?.dataset.id;
+      const li = card?.closest('li');
+
+      if (id) {
+        try {
+          await fetch(`${BASE_URL}/${id}`, {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ favoris: false })
+          });
+
+          window.dispatchEvent(new CustomEvent('favori-changed', { detail: { id, isFav: false } }));
+          li?.remove();
+        } catch (error) {
+          console.error('Erreur lors de la suppression du favori :', error);
+        }
+      }
+    });
+  });
+
+</script>

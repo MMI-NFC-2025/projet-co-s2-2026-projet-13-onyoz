@@ -1,0 +1,328 @@
+---
+import { getRestaurantsPrixCroissant } from '../../backend.mjs';
+
+const BASE = import.meta.env.DEV
+  ? 'http://pbonyoz.lucie-garcia.fr/api/files/pbc_1567773776'
+  : '/pb/api/files/pbc_1567773776';
+const restaurants = await getRestaurantsPrixCroissant();
+---
+
+{/* max-w-7xl mx-auto évite l'étalement infini sur très grand écran */}
+<section aria-labelledby="titre-filtres" class="px-4 py-6 max-w-7xl mx-auto w-full">
+  <h2 id="titre-filtres" class="text-xl font-bold text-noir mb-1">Filtres</h2>
+  <p class="text-sm text-gris mb-4" id="filtres-description">
+    Sélectionnez des filtres pour trouver ce qu'il vous faut !
+  </p>
+
+  <nav aria-label="Filtres de recherche de restaurants" aria-describedby="filtres-description">
+    <ul class="flex flex-wrap gap-2 mb-4 list-none p-0 m-0" role="list">
+      <li>
+        <button
+          id="btn-prix"
+          aria-haspopup="true"
+          aria-expanded="false"
+          aria-controls="dropdown-prix"
+          class="flex items-center gap-1 border border-gris rounded-full px-3 py-1 text-sm font-medium bg-blanc hover:bg-beige focus:outline-2 focus:outline-bordeaux transition"
+        >
+          Trier par prix <span aria-hidden="true" class="text-xs">▾</span>
+        </button>
+      </li>
+
+      <li>
+        <button
+          id="btn-type"
+          aria-haspopup="true"
+          aria-expanded="false"
+          aria-controls="dropdown-type"
+          class="flex items-center gap-1 border border-gris rounded-full px-3 py-1 text-sm font-medium bg-blanc hover:bg-beige focus:outline-2 focus:outline-bordeaux transition"
+        >
+          Filtrer par types <span aria-hidden="true" class="text-xs">▾</span>
+        </button>
+      </li>
+    </ul>
+  </nav>
+
+  <div
+    id="dropdown-prix"
+    hidden
+    class="bg-blanc rounded-xl shadow-lg border border-beige p-3 mb-4 flex flex-col gap-2 text-sm w-48"
+  >
+    <button type="button" class="text-left hover:text-bordeaux transition prix-option" data-sort="asc">
+      Prix croissant ↑
+    </button>
+    <button type="button" class="text-left hover:text-bordeaux transition prix-option" data-sort="desc">
+      Prix décroissant ↓
+    </button>
+  </div>
+
+  <div
+    id="dropdown-type"
+    hidden
+    class="bg-blanc rounded-xl shadow-lg border border-beige p-3 mb-4 flex flex-wrap gap-2 text-sm"
+  >
+    <button
+      type="button"
+      class="flex items-center gap-1 border border-vert text-vert rounded-full px-3 py-1 font-medium filter-tag"
+      data-filter="vege"
+      aria-pressed="false"
+    >
+      <span aria-hidden="true">🌿</span> Végétarien
+    </button>
+    <button
+      type="button"
+      class="flex items-center gap-1 border border-vert text-vert rounded-full px-3 py-1 font-medium filter-tag"
+      data-filter="halal"
+      aria-pressed="false"
+    >
+      <span aria-hidden="true">☪</span> Halal
+    </button>
+    <button
+      type="button"
+      class="flex items-center gap-1 border border-vert text-vert rounded-full px-3 py-1 font-medium filter-tag"
+      data-filter="glutten"
+      aria-pressed="false"
+    >
+      <span aria-hidden="true">🌾</span> Sans gluten
+    </button>
+  </div>
+
+  <p id="resultat-annonce" role="status" aria-live="polite" class="sr-only"></p>
+  <p id="favori-annonce" role="alert" aria-live="assertive" class="sr-only"></p>
+
+  {/* MODIFICATION : grid-cols-1 (mobile) -> md:grid-cols-2 (tablette) -> lg:grid-cols-3 (PC) */}
+  <ul id="resto-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 list-none p-0 m-0" role="list">
+    {restaurants.map((resto) => (
+      <li class="h-full">
+        {/* h-full harmonise la hauteur des cartes sur une même ligne */}
+        <article
+          class="flex flex-col sm:flex-row sm:items-center gap-4 bg-bordeaux text-blanc rounded-2xl p-4 shadow-md resto-card relative h-full"
+          data-id={resto.id}
+          data-vege={resto.vege ? 'true' : 'false'}
+          data-halal={resto.halal ? 'true' : 'false'}
+          data-glutten={resto.glutten ? 'true' : 'false'}
+          data-prix={resto.prix_moyen}
+        >
+          <div class="w-full sm:w-32 h-36 sm:h-24 shrink-0 rounded-xl overflow-hidden shadow-sm">
+            <img 
+              src={`${BASE}/${resto.id}/${resto.images_principale}`} 
+              alt={`Photo du restaurant ${resto.nom_restaurants}`} 
+              class="w-full h-full object-cover" 
+              loading="lazy"
+            />
+          </div>
+
+          <div class="flex-1 flex flex-col gap-1 pr-10 sm:pr-8">
+            <h3 class="font-bold text-base text-blanc leading-tight">
+              <a href={`/resto/${resto.id}`} class="underline-offset-2 hover:underline focus:underline">{resto.nom_restaurants}</a>
+            </h3>
+            <p class="text-sm text-blanc/90">{resto.prix_moyen} €</p>
+
+            <ul class="flex flex-wrap gap-2 my-1 list-none p-0 m-0" aria-label="Régimes alimentaires" role="list">
+              {resto.vege && (
+                <li class="w-7 h-7 rounded-full bg-blanc flex items-center justify-center text-sm shadow-sm text-noir">
+                  <span aria-hidden="true">🌿</span>
+                  <span class="sr-only">Végétarien</span>
+                </li>
+              )}
+              {resto.halal && (
+                <li class="w-7 h-7 rounded-full bg-blanc flex items-center justify-center text-sm shadow-sm text-noir">
+                  <span aria-hidden="true">☪</span>
+                  <span class="sr-only">Halal</span>
+                </li>
+              )}
+              {resto.glutten && (
+                <li class="w-7 h-7 rounded-full bg-blanc flex items-center justify-center text-sm shadow-sm text-noir">
+                  <span aria-hidden="true">🌾</span>
+                  <span class="sr-only">Sans gluten</span>
+                </li>
+              )}
+            </ul>
+
+            <p class="text-xs text-blanc/80 mt-0.5">
+              Horaires : <time>{resto.horaires_ouvertures}h</time> – <time>{resto.horaires_fermetures}h</time>
+            </p>
+
+            <a href={`/resto/${resto.id}`} class="text-xs text-blanc underline mt-1 w-fit">Voir la fiche</a>
+          </div>
+
+          <button
+            class="absolute top-3 right-3 sm:top-4 sm:right-4 focus:outline-2 focus:outline-blanc rounded-full fav-btn p-1 transition"
+            aria-label={`${resto.favoris ? 'Retirer' : 'Ajouter'} ${resto.nom_restaurants} aux favoris`}
+            aria-pressed={resto.favoris ? 'true' : 'false'}
+            data-favoris={resto.favoris ? 'true' : 'false'}
+            data-nom={resto.nom_restaurants}
+          >
+            <svg
+              aria-hidden="true"
+              focusable="false"
+              class="w-6 h-6 transition-colors duration-200"
+              fill={resto.favoris ? 'var(--color-or)' : 'none'}
+              stroke={resto.favoris ? 'var(--color-or)' : 'var(--color-blanc)'}
+              stroke-width="1.5"
+              viewBox="0 0 24 24"
+            >
+              <path d="M12 .587l3.668 7.431 8.2 1.192-5.934 5.783 1.4 8.164L12 18.896l-7.334 3.861 1.4-8.164L.132 9.21l8.2-1.192z" />
+            </svg>
+          </button>
+        </article>
+      </li>
+    ))}
+  </ul>
+</section>
+
+<script>
+  const BASE_URL = '/pb/api/collections/pbc_1567773776/records';
+  const resultAnnouncement = document.getElementById('resultat-annonce');
+  const favoriteAnnouncement = document.getElementById('favori-annonce');
+  const restaurantList = document.getElementById('resto-list');
+  const filterTags = document.querySelectorAll('.filter-tag');
+  const priceButtons = document.querySelectorAll('.prix-option');
+  const favoriteButtons = document.querySelectorAll('.fav-btn');
+  const activeFilters = new Set();
+
+  function updateVisibleCount() {
+    const items = Array.from(document.querySelectorAll('#resto-list > li'));
+    const visibleItems = items.filter((item) => item.style.display !== 'none');
+    if (resultAnnouncement) {
+      resultAnnouncement.textContent = `${visibleItems.length} restaurant(s) affiche(s).`;
+    }
+  }
+
+  function setupDropdown(btnId, menuId) {
+    const btn = document.getElementById(btnId);
+    const menu = document.getElementById(menuId);
+    
+    btn?.addEventListener('click', () => {
+      const isOpen = btn.getAttribute('aria-expanded') === 'true';
+      btn.setAttribute('aria-expanded', String(!isOpen));
+      if (menu) {
+        menu.hidden = isOpen;
+      }
+    });
+  }
+
+  setupDropdown('btn-prix', 'dropdown-prix');
+  setupDropdown('btn-type', 'dropdown-type');
+
+  filterTags.forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const filter = btn.dataset.filter;
+      if (!filter) return;
+
+      if (activeFilters.has(filter)) {
+        activeFilters.delete(filter);
+        btn.setAttribute('aria-pressed', 'false');
+        btn.classList.remove('bg-vert', 'text-blanc');
+      } else {
+        activeFilters.add(filter);
+        btn.setAttribute('aria-pressed', 'true');
+        btn.classList.add('bg-vert', 'text-blanc');
+      }
+      applyFilters();
+    });
+  });
+
+  function applyFilters() {
+    const cards = document.querySelectorAll('.resto-card');
+    cards.forEach((card) => {
+      const li = card.closest('li');
+      if (!li) return;
+
+      const match = [...activeFilters].every((filter) => card.dataset[filter] === 'true');
+      li.style.display = match ? '' : 'none';
+    });
+    updateVisibleCount();
+  }
+
+  priceButtons.forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const sortOrder = btn.dataset.sort;
+      if (!restaurantList) return;
+
+      const items = Array.from(restaurantList.querySelectorAll(':scope > li'));
+
+      items.sort((a, b) => {
+        const cardA = a.querySelector('.resto-card');
+        const cardB = b.querySelector('.resto-card');
+        
+        const priceA = cardA ? parseFloat(cardA.dataset.prix!) || 0 : 0;
+        const priceB = cardB ? parseFloat(cardB.dataset.prix!) || 0 : 0;
+        
+        return sortOrder === 'asc' ? priceA - priceB : priceB - priceA;
+      });
+
+      items.forEach((item) => restaurantList.appendChild(item));
+      updateVisibleCount();
+      
+      const prixButton = document.getElementById('btn-prix');
+      const prixDropdown = document.getElementById('dropdown-prix');
+      prixButton?.setAttribute('aria-expanded', 'false');
+      if (prixDropdown) {
+        prixDropdown.hidden = true;
+      }
+    });
+  });
+
+  favoriteButtons.forEach((btn) => {
+    btn.addEventListener('click', async (event) => {
+      event.stopPropagation();
+
+      const isFav = btn.dataset.favoris === 'true';
+      const nom = btn.dataset.nom;
+      const svg = btn.querySelector('svg');
+      const card = btn.closest('.resto-card');
+      const id = card?.dataset.id;
+
+      const nextFavState = !isFav;
+
+      btn.dataset.favoris = String(nextFavState);
+      btn.setAttribute('aria-pressed', String(nextFavState));
+      btn.setAttribute(
+        'aria-label',
+        `${nextFavState ? 'Retirer' : 'Ajouter'} ${nom} aux favoris`
+      );
+      
+      if (svg) {
+        svg.setAttribute('fill', nextFavState ? 'var(--color-or)' : 'none');
+        svg.setAttribute('stroke', nextFavState ? 'var(--color-or)' : 'var(--color-blanc)');
+      }
+
+      if (!id) {
+        return;
+      }
+
+      try {
+        const response = await fetch(`${BASE_URL}/${id}`, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ favoris: nextFavState })
+        });
+
+        if (!response.ok) {
+          throw new Error(`Erreur HTTP ${response.status}`);
+        }
+
+        window.dispatchEvent(new CustomEvent('favori-changed', { detail: { id, isFav: nextFavState } }));
+      } catch (error) {
+        console.error('Erreur lors de la mise a jour du favori :', error);
+        if (favoriteAnnouncement) {
+          favoriteAnnouncement.textContent = 'Mise a jour du favori impossible pour le moment.';
+        }
+
+        btn.dataset.favoris = String(isFav);
+        btn.setAttribute('aria-pressed', String(isFav));
+        btn.setAttribute(
+          'aria-label',
+          `${isFav ? 'Retirer' : 'Ajouter'} ${nom} aux favoris`
+        );
+        if (svg) {
+          svg.setAttribute('fill', isFav ? 'var(--color-or)' : 'none');
+          svg.setAttribute('stroke', isFav ? 'var(--color-or)' : 'var(--color-blanc)');
+        }
+      }
+    });
+  });
+
+  updateVisibleCount();
+
+</script>

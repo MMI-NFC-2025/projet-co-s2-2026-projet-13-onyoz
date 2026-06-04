@@ -1,0 +1,37 @@
+---
+import MapSection from "../map/MapSection.astro";
+import Resto from "../map/resto.astro";
+import { getRestaurantsPrixCroissant } from "../../backend.mjs";
+
+const restaurants = await getRestaurantsPrixCroissant().catch(() => []);
+---
+
+<div class="fixed inset-0 w-full h-full z-0">
+  <MapSection />
+</div>
+
+<div class="relative z-10 w-full min-h-screen pt-40 md:pt-10 pb-20">
+  <main class="w-full max-w-6xl mx-auto px-4">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      {restaurants.map((r) => (
+        <div class="transition duration-300 hover:scale-105">
+          <Resto resto={r} />
+        </div>
+      ))}
+    </div>
+  </main>
+</div>
+
+<style is:global>
+  html,
+  body {
+    background: transparent;
+  }
+
+  footer {
+    background-color: var(--color-rouge);
+    position: relative;
+    z-index: 20;
+    margin-top: 50px;
+  }
+</style>

@@ -1,0 +1,41 @@
+---
+import ellipse from "../../assets/images/Group 22(1).svg";
+const { title = "Formulaire de contact" } = Astro.props;
+---
+
+<section class="en-tete">
+    <img src={ellipse.src} aria-hidden="true" class="deco" />
+    <h1>{title}</h1>
+</section>
+
+<style>
+.en-tete {
+    position: relative;
+    background-color: var(--color-beige);
+    padding: 4rem 1.5rem 1rem;
+    overflow: hidden;
+}
+
+.deco {
+    position: absolute;
+    top: -4rem;
+    right: -4rem;
+    width: 20rem;
+    opacity: 0.4;
+    pointer-events: none;
+}
+
+h1 {
+    position: relative;
+    z-index: 10;
+    text-align: center;
+    font-family: var(--font-kodchasan);
+    font-size: 2.25rem;
+    color: var(--color-noir);
+}
+
+@media (min-width: 768px) {
+    .en-tete { padding-top: 6rem; }
+    h1 { font-size: 3rem; }
+}
+</style>

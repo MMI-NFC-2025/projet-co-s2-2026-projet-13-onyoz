@@ -1,0 +1,25 @@
+---
+import Layout from "../layouts/Layout.astro";
+---
+
+<Layout
+  title="Page introuvable - Onyoz"
+  description="La page que vous cherchez n'existe pas ou a ete deplacee."
+>
+  <main class="mx-auto max-w-5xl px-6 py-16 md:py-24">
+    <section class="theme-panel mx-auto flex max-w-3xl flex-col items-center gap-6 px-8 py-12 text-center md:px-12">
+      <p class="theme-badge-dark px-4 py-2 text-sm font-semibold tracking-wide">Erreur 404</p>
+      <h1 class="text-bordeaux text-3xl font-bold md:text-5xl">Cette page est introuvable</h1>
+      <p class="text-gris max-w-2xl text-base md:text-lg">
+        Le lien utilise est peut-etre incorrect ou la page a ete deplacee. Vous pouvez revenir a
+        l'accueil pour continuer votre navigation.
+      </p>
+      <a
+        href="/"
+        class="theme-btn-primary inline-flex items-center justify-center px-6 py-3 text-base font-semibold"
+      >
+        Retour a l'accueil
+      </a>
+    </section>
+  </main>
+</Layout>

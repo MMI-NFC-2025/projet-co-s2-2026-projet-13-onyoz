@@ -1,0 +1,42 @@
+---
+import logoFooter from "../assets/icons/logoblanc_oignon.svg";
+import logoInstagram from "../assets/icons/logo-Instagram.svg";
+import logoFacebook from "../assets/icons/facebook.svg";
+import logoTiktok from "../assets/icons/logo TikTok.svg";
+import logoYoutube from "../assets/icons/logo-Youtube.svg";
+---
+
+<footer class="site-footer" aria-label="Pied de page">
+    <div class="footer-container">
+        
+        <div class="footer-brand">
+            <img src={logoFooter.src} alt="Onyoz" class="footer-logo" />
+        </div>
+
+        <div class="footer-col">
+            <p class="footer-titre">INFOS</p>
+            <ul class="footer-liens">
+                <li><a href="/mentions_legales">Mentions Légales</a></li>
+                <li><a href="/cgu">Conditions D'utilisation</a></li>
+                <li><a href="/contact">Contact</a></li>
+                <li><a href="/a_propos">À Propos</a></li>
+            </ul>
+        </div>
+
+        <div class="footer-col">
+            <p class="footer-titre">SUIVEZ-NOUS</p>
+            <div class="footer-social">
+                <a href="https://www.instagram.com" target="_blank" rel="noopener noreferrer" aria-label="Instagram, ouvre un nouvel onglet"><img src={logoInstagram.src} alt="" /></a>
+                <a href="https://www.facebook.com" target="_blank" rel="noopener noreferrer" aria-label="Facebook, ouvre un nouvel onglet"><img src={logoFacebook.src} alt="" /></a>
+                <a href="https://www.tiktok.com" target="_blank" rel="noopener noreferrer" aria-label="TikTok, ouvre un nouvel onglet"><img src={logoTiktok.src} alt="" /></a>
+                <a href="https://www.youtube.com" target="_blank" rel="noopener noreferrer" aria-label="YouTube, ouvre un nouvel onglet"><img src={logoYoutube.src} alt="" /></a>
+            </div>
+        </div>
+
+    </div>
+
+    <p class="footer-disclaimer">
+        Ce site a été réalisé dans le cadre d'un projet universitaire, il est donc
+        fictif. Ne prenez pas les informations de ce site pour vraies.
+    </p>
+</footer>

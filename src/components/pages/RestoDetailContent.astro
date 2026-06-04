@@ -1,0 +1,45 @@
+---
+import RestoHero from "../resto/RestoHero.astro";
+import RestoInfo from "../resto/RestoInfo.astro";
+import RestoMap from "../resto/RestoMap.astro";
+import RestoMenu from "../resto/RestoMenu.astro";
+import RestoReviews from "../resto/RestoReviews.astro";
+
+interface Props {
+  resto: any;
+  avis: Array<{ [key: string]: unknown }>;
+}
+
+const { resto, avis } = Astro.props as Props;
+---
+
+{
+  resto ? (
+    <div class="grid gap-6 lg:grid-cols-12">
+      <article class="lg:col-span-7 bg-white rounded-3xl shadow-lg overflow-hidden">
+        <RestoHero resto={resto} />
+
+        <div class="p-4 md:p-6 space-y-8">
+          <RestoInfo resto={resto} />
+          <RestoMap resto={resto} />
+        </div>
+      </article>
+
+      <aside class="lg:col-span-5 space-y-6">
+        <section class="bg-white rounded-3xl shadow-lg p-4 md:p-6">
+          <RestoMenu resto={resto} />
+        </section>
+
+        <section class="bg-white rounded-3xl shadow-lg p-4 md:p-6">
+          <RestoReviews avis={avis} restoId={resto.id} />
+        </section>
+      </aside>
+    </div>
+  ) : (
+    <article class="bg-white rounded-3xl shadow-lg px-4 py-8 md:p-8 space-y-4 max-w-xl mx-auto">
+      <h1 class="text-2xl font-bold">Restaurant introuvable</h1>
+      <p class="text-sm text-gris">La fiche demandee n'existe pas ou n'est plus disponible.</p>
+      <a href="/carte" class="inline-block bg-bordeaux text-white px-4 py-2 rounded-md">Retour a la carte</a>
+    </article>
+  )
+}
