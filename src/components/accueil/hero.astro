@@ -4,7 +4,7 @@ import image from '../../assets/images/fond.avif';
 import logo from '../../assets/icons/logo_block(1).svg';
 ---
 
-<div class="flex flex-col min-h-[650px] md:min-h-[750px] w-full bg-noir">
+<div class="flex flex-col min-h-screen w-full bg-noir">
   <section aria-labelledby="hero-tagline" class="relative flex-1 flex flex-col items-center justify-center px-6 py-12 md:py-20 text-blanc overflow-hidden">
     
     <Image
@@ -20,7 +20,7 @@ import logo from '../../assets/icons/logo_block(1).svg';
         <img src={logo.src} alt="Onyoz" class="w-full h-full object-contain" />
       </div>
 
-      <p id="hero-tagline" class="text-blanc text-base md:text-xl lg:text-2xl font-medium leading-relaxed max-w-[260px] md:max-w-none drop-shadow-sm">
+      <p id="hero-tagline" class="text-blanc text-base md:text-xl lg:text-2xl font-medium leading-relaxed max-w-xs md:max-w-none drop-shadow-sm">
         On épluche les bons plans<br class="md:hidden" /> pour vous !
       </p>
 

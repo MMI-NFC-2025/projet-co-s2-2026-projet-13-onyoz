@@ -1,0 +1,244 @@
+<main class="min-h-screen bg-beige px-4 py-8 md:py-12">
+  <section class="max-w-2xl mx-auto">
+    <div class="mb-8">
+      <h1 class="text-3xl md:text-5xl font-bold text-noir">Mon compte</h1>
+      <p class="mt-3 text-gris text-base md:text-lg">
+        Retrouvez ici les informations de votre compte Onyoz.
+      </p>
+    </div>
+
+    <article class="theme-panel p-6 md:p-8 space-y-6">
+      <div id="account-connected" class="hidden space-y-6">
+        <div>
+          <p class="text-sm uppercase tracking-wide text-gris">Statut</p>
+          <p id="account-status" class="mt-1 text-lg font-semibold text-noir">Connecte</p>
+        </div>
+
+        <div class="grid gap-4 sm:grid-cols-2">
+          <div class="theme-panel-soft p-4">
+            <p class="text-sm text-gris">Nom</p>
+            <p id="account-name" class="mt-1 font-semibold text-noir">-</p>
+          </div>
+
+          <div class="theme-panel-soft p-4">
+            <p class="text-sm text-gris">Identifiant</p>
+            <p id="account-username" class="mt-1 font-semibold text-noir">-</p>
+          </div>
+
+          <div class="theme-panel-soft p-4 sm:col-span-2">
+            <p class="text-sm text-gris">Email</p>
+            <p id="account-email" class="mt-1 font-semibold text-noir">-</p>
+          </div>
+        </div>
+
+        <form id="account-form" class="theme-panel-soft grid gap-4 p-4 md:p-5">
+          <div>
+            <h2 class="text-xl font-bold text-noir">Modifier mon profil</h2>
+            <p class="mt-1 text-sm text-gris">Mettez a jour les informations associees a votre compte PocketBase.</p>
+          </div>
+
+          <label class="block">
+            <span class="text-sm font-semibold text-gris">Nom</span>
+            <input
+              id="account-form-name"
+              name="name"
+              type="text"
+              class="theme-field mt-1 w-full rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-bordeaux/40"
+              placeholder="Votre nom"
+            />
+          </label>
+
+          <label class="block">
+            <span class="text-sm font-semibold text-gris">Identifiant</span>
+            <input
+              id="account-form-username"
+              name="username"
+              type="text"
+              required
+              minlength="3"
+              maxlength="24"
+              pattern="[A-Za-z0-9._-]{3,24}"
+              autocomplete="username"
+              class="theme-field mt-1 w-full rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-bordeaux/40"
+              placeholder="votre.identifiant"
+            />
+          </label>
+
+          <label class="block">
+            <span class="text-sm font-semibold text-gris">Email</span>
+            <input
+              id="account-form-email"
+              name="email"
+              type="email"
+              required
+              autocomplete="email"
+              class="theme-field mt-1 w-full rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-bordeaux/40"
+              placeholder="vous@exemple.fr"
+            />
+          </label>
+
+          <div class="flex flex-wrap gap-3">
+            <button
+              id="account-save-button"
+              type="submit"
+              class="theme-btn-primary px-5 py-3"
+            >
+              Enregistrer mes modifications
+            </button>
+          </div>
+        </form>
+
+        <div class="flex flex-wrap gap-3">
+          <a
+            href="/carte"
+            class="theme-btn-primary inline-flex items-center px-5 py-3"
+          >
+            Voir les restaurants
+          </a>
+
+          <button
+            id="account-logout-button"
+            type="button"
+            class="theme-btn-muted px-5 py-3"
+          >
+            Se deconnecter
+          </button>
+        </div>
+      </div>
+
+      <div id="account-disconnected" class="space-y-4 hidden">
+        <p class="text-base text-noir font-semibold">Vous n etes pas connecte.</p>
+        <p class="text-sm text-gris">Connectez-vous ou creez un compte pour acceder a votre espace.</p>
+
+        <div class="flex flex-wrap gap-3">
+          <a
+            href="/se_connecter"
+            class="theme-btn-primary inline-flex items-center px-5 py-3"
+          >
+            Se connecter
+          </a>
+          <a
+            href="/creer_compte"
+            class="theme-btn-accent inline-flex items-center px-5 py-3"
+          >
+            Creer un compte
+          </a>
+        </div>
+      </div>
+
+      <p id="account-message" class="text-sm font-medium"></p>
+    </article>
+  </section>
+</main>
+
+<script type="module">
+  import PocketBase from "pocketbase";
+
+  const pb = new PocketBase('/pb');
+  pb.autoCancellation(false);
+
+  const connectedSection = document.getElementById('account-connected');
+  const disconnectedSection = document.getElementById('account-disconnected');
+  const statusEl = document.getElementById('account-status');
+  const nameEl = document.getElementById('account-name');
+  const usernameEl = document.getElementById('account-username');
+  const emailEl = document.getElementById('account-email');
+  const messageEl = document.getElementById('account-message');
+  const logoutButton = document.getElementById('account-logout-button');
+  const accountForm = document.getElementById('account-form');
+  const accountNameInput = document.getElementById('account-form-name');
+  const accountUsernameInput = document.getElementById('account-form-username');
+  const accountEmailInput = document.getElementById('account-form-email');
+  const accountSaveButton = document.getElementById('account-save-button');
+
+  function setMessage(text = '', kind = 'info') {
+    if (!messageEl) return;
+    messageEl.textContent = text;
+    messageEl.className = 'text-sm font-medium';
+    if (kind === 'error') messageEl.classList.add('text-bordeaux');
+    if (kind === 'success') messageEl.classList.add('text-vert');
+    if (kind === 'info') messageEl.classList.add('text-gris');
+  }
+
+  function updateAccountUI() {
+    const isConnected = pb.authStore.isValid;
+    const model = pb.authStore.model;
+
+    connectedSection?.classList.toggle('hidden', !isConnected);
+    disconnectedSection?.classList.toggle('hidden', isConnected);
+
+    if (!isConnected || !model) {
+      setMessage('');
+      return;
+    }
+
+    if (statusEl) statusEl.textContent = 'Connecte a votre compte PocketBase';
+    if (nameEl) nameEl.textContent = model.name || '-';
+    if (usernameEl) usernameEl.textContent = model.username || '-';
+    if (emailEl) emailEl.textContent = model.email || '-';
+    if (accountNameInput) accountNameInput.value = model.name || '';
+    if (accountUsernameInput) accountUsernameInput.value = model.username || '';
+    if (accountEmailInput) accountEmailInput.value = model.email || '';
+  }
+
+  function setSaving(isSaving) {
+    if (!accountSaveButton || !accountForm) return;
+    accountSaveButton.disabled = isSaving;
+    accountSaveButton.textContent = isSaving ? 'Enregistrement...' : 'Enregistrer mes modifications';
+    accountForm.setAttribute('aria-busy', String(isSaving));
+  }
+
+  updateAccountUI();
+  pb.authStore.onChange(() => {
+    updateAccountUI();
+  });
+
+  logoutButton?.addEventListener('click', () => {
+    pb.authStore.clear();
+    updateAccountUI();
+    setMessage('Deconnexion effectuee.', 'info');
+  });
+
+  accountForm?.addEventListener('submit', async (event) => {
+    event.preventDefault();
+
+    if (!pb.authStore.isValid || !pb.authStore.model) {
+      setMessage('Connectez-vous avant de modifier votre profil.', 'error');
+      return;
+    }
+
+    if (!accountForm.checkValidity()) {
+      accountForm.reportValidity();
+      return;
+    }
+
+    const name = String(accountNameInput?.value || '').trim();
+    const username = String(accountUsernameInput?.value || '').trim();
+    const email = String(accountEmailInput?.value || '').trim();
+
+    if (!/^[A-Za-z0-9._-]{3,24}$/.test(username)) {
+      setMessage('Choisissez un identifiant de 3 a 24 caracteres (lettres, chiffres, ., _, -).', 'error');
+      return;
+    }
+
+    try {
+      setSaving(true);
+      setMessage('Enregistrement en cours...', 'info');
+
+      await pb.collection('users').update(pb.authStore.model.id, {
+        name,
+        username,
+        email,
+      });
+
+      await pb.collection('users').authRefresh();
+      updateAccountUI();
+      setMessage('Profil mis a jour avec succes.', 'success');
+    } catch (error) {
+      console.error(error);
+      setMessage('Impossible de mettre a jour le profil. Verifiez que l email et l identifiant sont disponibles.', 'error');
+    } finally {
+      setSaving(false);
+    }
+  });
+</script>

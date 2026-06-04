@@ -6,5 +6,14 @@ import tailwindcss from '@tailwindcss/vite';
 export default defineConfig({
   vite: {
     plugins: [tailwindcss()],
+    server: {
+      proxy: {
+        '/pb': {
+          target: 'http://pbonyoz.lucie-garcia.fr',
+          changeOrigin: true,
+          rewrite: (path) => path.replace(/^\/pb/, ''),
+        },
+      },
+    },
   },
 });

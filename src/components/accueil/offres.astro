@@ -1,7 +1,9 @@
 ---
 import { getImagesPrincipales } from '../../backend.mjs';
 
-const BASE = '/pb/api/files/pbc_1567773776';
+const BASE = import.meta.env.DEV
+  ? 'http://pbonyoz.lucie-garcia.fr/api/files/pbc_1567773776'
+  : '/pb/api/files/pbc_1567773776';
 const offres = await getImagesPrincipales();
 const affichees = offres.slice(0, 2);
 ---

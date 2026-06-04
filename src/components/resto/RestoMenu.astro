@@ -1,7 +1,10 @@
 ---
 const { resto } = Astro.props;
 
-const FILE_BASE = "/pb/api/files/pbc_1567773776";
+const FILE_BASE = import.meta.env.DEV
+  ? "http://pbonyoz.lucie-garcia.fr/api/files"
+  : "/pb/api/files";
+const collectionId = resto?.collectionId ?? "pbc_1567773776";
 const gallery = Array.isArray(resto?.images) ? resto.images.filter(Boolean).slice(0, 2) : [];
 const menuLink = resto?.site_web || `https://www.google.com/search?q=${encodeURIComponent(`${resto.nom_restaurants} Montbeliard`)}`;
 ---
@@ -9,12 +12,12 @@ const menuLink = resto?.site_web || `https://www.google.com/search?q=${encodeURI
   <h2 class="font-bold text-2xl">Menu</h2>
   <p class="text-base mt-1">Prix moyen : {resto.prix_moyen} €</p>
 
-  <div class="mt-3 grid grid-cols-2 gap-3">
+  <div class="mt-3 grid grid-cols-1 sm:grid-cols-2 gap-3">
     {
       gallery.length > 0 ? (
         gallery.map((imageName: string) => (
           <img
-            src={`${FILE_BASE}/${resto.id}/${imageName}`}
+            src={`${FILE_BASE}/${collectionId}/${resto.id}/${imageName}`}
             alt={`Plat de ${resto.nom_restaurants}`}
             class="w-full h-32 md:h-40 object-cover rounded-lg"
             loading="lazy"

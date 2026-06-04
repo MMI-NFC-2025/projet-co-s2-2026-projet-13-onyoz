@@ -12,15 +12,15 @@
 
       <form id="login-form" class="space-y-4">
         <label class="block">
-          <span class="text-sm font-semibold text-gris">Email</span>
+          <span class="text-sm font-semibold text-gris">Email ou identifiant</span>
           <input
-            id="login-email"
-            name="email"
-            type="email"
+            id="login-identity"
+            name="identity"
+            type="text"
             required
             autocomplete="username"
             class="mt-1 w-full rounded-xl border border-black/15 px-4 py-3 outline-none focus:ring-2 focus:ring-bordeaux/40"
-            placeholder="vous@exemple.fr"
+            placeholder="vous@exemple.fr ou votre.identifiant"
           />
         </label>
 
@@ -88,10 +88,11 @@
 
   function updateAuthUI() {
     const isConnected = pb.authStore.isValid;
+    const accountLabel = pb.authStore.model?.name || pb.authStore.model?.username || pb.authStore.model?.email || "inconnu";
 
     if (authStatus) {
       authStatus.textContent = isConnected
-        ? `Connecte: ${pb.authStore.model?.email ?? "inconnu"}`
+        ? `Connecte: ${accountLabel}`
         : "Non connecte.";
     }
 
@@ -107,19 +108,26 @@
       event.preventDefault();
       const formData = new FormData(loginForm);
 
-      const email = String(formData.get("email") || "").trim();
+      const identity = String(formData.get("identity") || "").trim();
       const password = String(formData.get("password") || "");
 
       try {
-        await pb.collection("users").authWithPassword(email, password);
+        await pb.collection("users").authWithPassword(identity, password);
         updateAuthUI();
-        showMessage("Connexion reussie.", "success");
+        showMessage("Connexion reussie. Redirection vers votre compte...", "success");
+        setTimeout(() => {
+          window.location.href = "/mon_compte";
+        }, 800);
       } catch (error) {
         console.error(error);
-        showMessage("Echec de connexion. Verifiez vos identifiants.", "error");
+        showMessage("Echec de connexion. Verifiez votre email, identifiant et mot de passe.", "error");
       }
     });
   }
+
+  pb.authStore.onChange(() => {
+    updateAuthUI();
+  });
 
   if (logoutButton) {
     logoutButton.addEventListener("click", () => {

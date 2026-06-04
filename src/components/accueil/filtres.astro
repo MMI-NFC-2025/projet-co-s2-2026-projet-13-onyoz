@@ -1,7 +1,9 @@
 ---
 import { getRestaurantsPrixCroissant } from '../../backend.mjs';
 
-const BASE = '/pb/api/files/pbc_1567773776';
+const BASE = import.meta.env.DEV
+  ? 'http://pbonyoz.lucie-garcia.fr/api/files/pbc_1567773776'
+  : '/pb/api/files/pbc_1567773776';
 const restaurants = await getRestaurantsPrixCroissant();
 ---
 
@@ -154,8 +156,8 @@ const restaurants = await getRestaurantsPrixCroissant();
               aria-hidden="true"
               focusable="false"
               class="w-6 h-6 transition-colors duration-200"
-              fill={resto.favoris ? '#EAB308' : 'none'}
-              stroke={resto.favoris ? '#EAB308' : '#FFFFFF'}
+              fill={resto.favoris ? 'var(--color-or)' : 'none'}
+              stroke={resto.favoris ? 'var(--color-or)' : 'var(--color-blanc)'}
               stroke-width="1.5"
               viewBox="0 0 24 24"
             >
@@ -170,21 +172,25 @@ const restaurants = await getRestaurantsPrixCroissant();
 
 <script>
   const BASE_URL = '/pb/api/collections/pbc_1567773776/records';
-
-  // --- GESTION DES DROPDOWNS ---
   const resultAnnouncement = document.getElementById('resultat-annonce');
   const favoriteAnnouncement = document.getElementById('favori-annonce');
+  const restaurantList = document.getElementById('resto-list');
+  const filterTags = document.querySelectorAll('.filter-tag');
+  const priceButtons = document.querySelectorAll('.prix-option');
+  const favoriteButtons = document.querySelectorAll('.fav-btn');
+  const activeFilters = new Set();
 
-  const updateVisibleCount = () => {
-    const visibleItems = Array.from(document.querySelectorAll<HTMLElement>('#resto-list > li')).filter((item) => item.style.display !== 'none');
+  function updateVisibleCount() {
+    const items = Array.from(document.querySelectorAll('#resto-list > li'));
+    const visibleItems = items.filter((item) => item.style.display !== 'none');
     if (resultAnnouncement) {
       resultAnnouncement.textContent = `${visibleItems.length} restaurant(s) affiche(s).`;
     }
-  };
+  }
 
-  const setupDropdown = (btnId: string, menuId: string) => {
+  function setupDropdown(btnId, menuId) {
     const btn = document.getElementById(btnId);
-    const menu = document.getElementById(menuId) as HTMLElement | null;
+    const menu = document.getElementById(menuId);
     
     btn?.addEventListener('click', () => {
       const isOpen = btn.getAttribute('aria-expanded') === 'true';
@@ -193,18 +199,16 @@ const restaurants = await getRestaurantsPrixCroissant();
         menu.hidden = isOpen;
       }
     });
-  };
+  }
 
   setupDropdown('btn-prix', 'dropdown-prix');
   setupDropdown('btn-type', 'dropdown-type');
 
-  // --- FILTRES DE TYPE ---
-  const filterTags = document.querySelectorAll<HTMLButtonElement>('.filter-tag');
-  const activeFilters = new Set<string>();
-
   filterTags.forEach((btn) => {
     btn.addEventListener('click', () => {
-      const filter = btn.dataset.filter!;
+      const filter = btn.dataset.filter;
+      if (!filter) return;
+
       if (activeFilters.has(filter)) {
         activeFilters.delete(filter);
         btn.setAttribute('aria-pressed', 'false');
@@ -219,26 +223,27 @@ const restaurants = await getRestaurantsPrixCroissant();
   });
 
   function applyFilters() {
-    const cards = document.querySelectorAll<HTMLElement>('.resto-card');
+    const cards = document.querySelectorAll('.resto-card');
     cards.forEach((card) => {
-      const li = card.closest('li')!;
-      const match = [...activeFilters].every((f) => card.dataset[f] === 'true');
+      const li = card.closest('li');
+      if (!li) return;
+
+      const match = [...activeFilters].every((filter) => card.dataset[filter] === 'true');
       li.style.display = match ? '' : 'none';
     });
     updateVisibleCount();
   }
 
-  // --- TRI PAR PRIX  ---
-  const prixOptions = document.querySelectorAll<HTMLButtonElement>('.prix-option');
-  prixOptions.forEach((btn) => {
+  priceButtons.forEach((btn) => {
     btn.addEventListener('click', () => {
       const sortOrder = btn.dataset.sort;
-      const list = document.getElementById('resto-list')!;
-      const items = Array.from(list.querySelectorAll<HTMLElement>(':scope > li'));
+      if (!restaurantList) return;
+
+      const items = Array.from(restaurantList.querySelectorAll(':scope > li'));
 
       items.sort((a, b) => {
-        const cardA = a.querySelector<HTMLElement>('.resto-card');
-        const cardB = b.querySelector<HTMLElement>('.resto-card');
+        const cardA = a.querySelector('.resto-card');
+        const cardB = b.querySelector('.resto-card');
         
         const priceA = cardA ? parseFloat(cardA.dataset.prix!) || 0 : 0;
         const priceB = cardB ? parseFloat(cardB.dataset.prix!) || 0 : 0;
@@ -246,31 +251,30 @@ const restaurants = await getRestaurantsPrixCroissant();
         return sortOrder === 'asc' ? priceA - priceB : priceB - priceA;
       });
 
-      items.forEach(item => list.appendChild(item));
+      items.forEach((item) => restaurantList.appendChild(item));
       updateVisibleCount();
       
-      document.getElementById('btn-prix')!.setAttribute('aria-expanded', 'false');
-      const prixDropdown = document.getElementById('dropdown-prix') as HTMLElement | null;
+      const prixButton = document.getElementById('btn-prix');
+      const prixDropdown = document.getElementById('dropdown-prix');
+      prixButton?.setAttribute('aria-expanded', 'false');
       if (prixDropdown) {
         prixDropdown.hidden = true;
       }
     });
   });
 
-  // --- TOGGLE FAVORIS ---
-  document.querySelectorAll<HTMLButtonElement>('.fav-btn').forEach((btn) => {
+  favoriteButtons.forEach((btn) => {
     btn.addEventListener('click', async (event) => {
       event.stopPropagation();
 
       const isFav = btn.dataset.favoris === 'true';
       const nom = btn.dataset.nom;
-      const svg = btn.querySelector('svg')!;
-      const card = btn.closest<HTMLElement>('.resto-card');
+      const svg = btn.querySelector('svg');
+      const card = btn.closest('.resto-card');
       const id = card?.dataset.id;
 
       const nextFavState = !isFav;
 
-      // Mise a jour visuelle immediate pour une interface plus fluide.
       btn.dataset.favoris = String(nextFavState);
       btn.setAttribute('aria-pressed', String(nextFavState));
       btn.setAttribute(
@@ -278,8 +282,10 @@ const restaurants = await getRestaurantsPrixCroissant();
         `${nextFavState ? 'Retirer' : 'Ajouter'} ${nom} aux favoris`
       );
       
-      svg.setAttribute('fill', nextFavState ? '#EAB308' : 'none');
-      svg.setAttribute('stroke', nextFavState ? '#EAB308' : '#FFFFFF');
+      if (svg) {
+        svg.setAttribute('fill', nextFavState ? 'var(--color-or)' : 'none');
+        svg.setAttribute('stroke', nextFavState ? 'var(--color-or)' : 'var(--color-blanc)');
+      }
 
       if (!id) {
         return;
@@ -303,15 +309,16 @@ const restaurants = await getRestaurantsPrixCroissant();
           favoriteAnnouncement.textContent = 'Mise a jour du favori impossible pour le moment.';
         }
 
-        // Rollback UI si PocketBase refuse la mise a jour.
         btn.dataset.favoris = String(isFav);
         btn.setAttribute('aria-pressed', String(isFav));
         btn.setAttribute(
           'aria-label',
           `${isFav ? 'Retirer' : 'Ajouter'} ${nom} aux favoris`
         );
-        svg.setAttribute('fill', isFav ? '#EAB308' : 'none');
-        svg.setAttribute('stroke', isFav ? '#EAB308' : '#FFFFFF');
+        if (svg) {
+          svg.setAttribute('fill', isFav ? 'var(--color-or)' : 'none');
+          svg.setAttribute('stroke', isFav ? 'var(--color-or)' : 'var(--color-blanc)');
+        }
       }
     });
   });

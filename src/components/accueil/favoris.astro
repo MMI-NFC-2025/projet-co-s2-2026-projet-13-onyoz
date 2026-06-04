@@ -1,7 +1,9 @@
 ---
 import { getRestaurantById, getRestaurantsFavoris } from '../../backend.mjs';
 
-const BASE = '/pb/api/files/pbc_1567773776';
+const BASE = import.meta.env.DEV
+  ? 'http://pbonyoz.lucie-garcia.fr/api/files/pbc_1567773776'
+  : '/pb/api/files/pbc_1567773776';
 
 const favorisIds = await getRestaurantsFavoris();
 const ids = favorisIds.filter(r => r.favoris).map(r => r.id);
@@ -41,7 +43,7 @@ const favoris = await Promise.all(ids.map(id => getRestaurantById(id)));
                 aria-hidden="true"
                 focusable="false"
                 class="w-6 h-6 drop-shadow"
-                fill="#cea563"
+                fill="var(--color-or)"
                 viewBox="0 0 24 24"
               >
                 <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01z" />
@@ -60,7 +62,7 @@ const favoris = await Promise.all(ids.map(id => getRestaurantById(id)));
               <ul class="flex flex-wrap gap-1 list-none p-0 my-1" aria-label="Régimes alimentaires" role="list">
                 {resto.vege && (
                   <li>
-                    <span class="inline-flex items-center gap-0.5 bg-vert text-blanc text-[10px] rounded-full px-2 py-0.5" title="Végétarien">
+                    <span class="theme-tag" title="Végétarien">
                       <span aria-hidden="true">🌿</span>
                       <span class="sr-only">Végétarien</span>
                     </span>
@@ -68,7 +70,7 @@ const favoris = await Promise.all(ids.map(id => getRestaurantById(id)));
                 )}
                 {resto.halal && (
                   <li>
-                    <span class="inline-flex items-center gap-0.5 bg-vert text-blanc text-[10px] rounded-full px-2 py-0.5" title="Halal">
+                    <span class="theme-tag" title="Halal">
                       <span aria-hidden="true">☪</span>
                       <span class="sr-only">Halal</span>
                     </span>
@@ -76,7 +78,7 @@ const favoris = await Promise.all(ids.map(id => getRestaurantById(id)));
                 )}
                 {resto.glutten && (
                   <li>
-                    <span class="inline-flex items-center gap-0.5 bg-vert text-blanc text-[10px] rounded-full px-2 py-0.5" title="Sans gluten">
+                    <span class="theme-tag" title="Sans gluten">
                       <span aria-hidden="true">🌾</span>
                       <span class="sr-only">Sans gluten</span>
                     </span>
@@ -85,14 +87,14 @@ const favoris = await Promise.all(ids.map(id => getRestaurantById(id)));
               </ul>
             </div>
 
-            <p class="text-[10px] text-blanc/80 leading-snug mt-auto">
+            <p class="theme-text-muted-on-dark text-xs leading-snug mt-auto">
               <span class="sr-only">Horaires d'ouverture :</span>
               <span aria-hidden="true">Horaires :</span>{' '}
               <time>{resto.horaires_ouvertures}h</time>{' – '}
               <time>{resto.horaires_fermetures}h</time>
             </p>
 
-            <a href={`/resto/${resto.id}`} class="text-[11px] text-blanc underline mt-1 w-fit">Voir la fiche</a>
+            <a href={`/resto/${resto.id}`} class="theme-link-small mt-1 w-fit">Voir la fiche</a>
           </div>
         </article>
       </li>
@@ -103,9 +105,10 @@ const favoris = await Promise.all(ids.map(id => getRestaurantById(id)));
 <script>
   const BASE_URL = '/pb/api/collections/pbc_1567773776/records';
 
-  // 1. Écouter les changements en provenance du composant Filtres
-  window.addEventListener('favori-changed', (e: any) => {
-    const { id, isFav } = e.detail;
+  window.addEventListener('favori-changed', (event) => {
+    const detail = event.detail || {};
+    const id = detail.id;
+    const isFav = detail.isFav;
     const card = document.querySelector(`.fav-card[data-id="${id}"]`);
     
     if (card && !isFav) {
@@ -113,12 +116,11 @@ const favoris = await Promise.all(ids.map(id => getRestaurantById(id)));
     }
   });
 
-  // 2. Gérer le clic sur l'étoile directement depuis la section favoris
   document.querySelectorAll('.fav-btn-page').forEach((btn) => {
     btn.addEventListener('click', async (event) => {
       event.stopPropagation();
 
-      const card = btn.closest('.fav-card') as HTMLElement;
+      const card = btn.closest('.fav-card');
       const id = card?.dataset.id;
       const li = card?.closest('li');
 
@@ -133,7 +135,7 @@ const favoris = await Promise.all(ids.map(id => getRestaurantById(id)));
           window.dispatchEvent(new CustomEvent('favori-changed', { detail: { id, isFav: false } }));
           li?.remove();
         } catch (error) {
-          console.error("Erreur lors de la suppression du favori :", error);
+          console.error('Erreur lors de la suppression du favori :', error);
         }
       }
     });

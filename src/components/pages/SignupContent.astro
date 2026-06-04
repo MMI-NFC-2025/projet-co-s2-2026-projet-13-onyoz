@@ -21,6 +21,22 @@
         </label>
 
         <label class="block">
+          <span class="text-sm font-semibold text-gris">Identifiant</span>
+          <input
+            id="signup-username"
+            name="username"
+            type="text"
+            required
+            minlength="3"
+            maxlength="24"
+            pattern="[A-Za-z0-9._-]{3,24}"
+            autocomplete="username"
+            class="mt-1 w-full rounded-xl border border-black/15 px-4 py-3 outline-none focus:ring-2 focus:ring-vert/40"
+            placeholder="votre.identifiant"
+          />
+        </label>
+
+        <label class="block">
           <span class="text-sm font-semibold text-gris">Email</span>
           <input
             id="signup-email"
@@ -104,17 +120,20 @@
 
       const formData = new FormData(signupForm);
       const name = String(formData.get("name") || "").trim();
+      const username = String(formData.get("username") || "").trim();
       const email = String(formData.get("email") || "").trim();
       const password = String(formData.get("password") || "");
       const passwordConfirm = String(formData.get("passwordConfirm") || "");
+
+      if (!/^[A-Za-z0-9._-]{3,24}$/.test(username)) {
+        showSignupMessage("Choisissez un identifiant de 3 a 24 caracteres (lettres, chiffres, ., _, -).", "error");
+        return;
+      }
 
       if (password !== passwordConfirm) {
         showSignupMessage("Les mots de passe ne correspondent pas.", "error");
         return;
       }
-
-      const usernameBase = email.split("@")[0] || "user";
-      const username = `${usernameBase}_${Math.random().toString(36).slice(2, 8)}`;
 
       try {
         await pb.collection("users").create({
@@ -126,14 +145,16 @@
           emailVisibility: true,
         });
 
+        await pb.collection("users").authWithPassword(username, password);
+
         signupForm.reset();
-        showSignupMessage("Compte cree avec succes. Redirection vers la connexion...", "success");
+        showSignupMessage("Compte cree et connecte avec succes. Redirection...", "success");
         setTimeout(() => {
-          window.location.href = "/se_connecter";
+          window.location.href = "/mon_compte";
         }, 1200);
       } catch (error) {
         console.error(error);
-        showSignupMessage("Impossible de creer le compte. Verifiez les informations.", "error");
+        showSignupMessage("Impossible de creer le compte. Verifiez que l identifiant et l email sont disponibles.", "error");
       }
     });
   }

@@ -7,7 +7,7 @@
 - [ ] URL de l'application finale :
 - [ ] URL de connexion au back office : 
 - [ ] Identifiant de connexion au backoffice :
-- [ ] Mot de passe de connexion au backoffice :
+e co- [ ] Mot de passe de connexion au backoffice :
 - [ ] URL de la maquette FIGMA : 
 - [ ] Description du projet :
 

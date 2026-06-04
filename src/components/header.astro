@@ -21,7 +21,12 @@ import Logo from "../assets/icons/logo_P.svg";
                 <li><a href="/a_propos">À propos d'Onyoz</a></li> 
                 <li><a href="/carte">Carte</a></li>
                 <li><a href="/contact">Contact</a></li>
-                <li class="nav-btn-connect"><a href="/se_connecter">Se connecter</a></li>
+                <li class="nav-auth-status" id="nav-auth-status" hidden>
+                    <span id="nav-auth-label">Connecte</span>
+                </li>
+                <li class="nav-btn-connect" id="nav-login-item"><a href="/se_connecter">Se connecter</a></li>
+                <li class="nav-btn-account" id="nav-account-item" hidden><a href="/mon_compte">Mon compte</a></li>
+                <li class="nav-btn-logout" id="nav-logout-item" hidden><button type="button" id="nav-logout-button">Se deconnecter</button></li>
             </ul>
         </nav>
     </div>
@@ -122,7 +127,36 @@ import Logo from "../assets/icons/logo_P.svg";
     transition: background-color 0.2s ease, color 0.2s ease;
 }
 
+.main-nav button {
+    display: block;
+    width: 100%;
+    color: white;
+    text-decoration: none;
+    font-family: var(--font-poppins);
+    font-size: 1.35rem;
+    text-align: center;
+    border: 2px solid white;
+    border-radius: 9999px;
+    padding: 0.625rem 2rem;
+    transition: background-color 0.2s ease, color 0.2s ease;
+    background: transparent;
+    cursor: pointer;
+}
+
+.nav-auth-status {
+    color: white;
+    font-family: var(--font-poppins);
+    text-align: center;
+    opacity: 0.95;
+    padding: 0 1rem;
+}
+
 .main-nav a:hover {
+    background-color: white;
+    color: var(--color-rouge);
+}
+
+.main-nav button:hover {
     background-color: white;
     color: var(--color-rouge);
 }
@@ -130,6 +164,7 @@ import Logo from "../assets/icons/logo_P.svg";
 /* Modification de la taille du texte sur tablette */
 @media (min-width: 768px) {
     .main-nav a { font-size: 1.5rem; }
+    .main-nav button { font-size: 1.5rem; }
     .main-nav ul { gap: 2rem; }
 }
 
@@ -176,6 +211,21 @@ import Logo from "../assets/icons/logo_P.svg";
         font-weight: 300;
     }
 
+    .main-nav button {
+        font-size: 1rem;
+        border: none;
+        border-radius: 0;
+        padding: 0.5rem 0.75rem;
+        font-weight: 300;
+        width: auto;
+    }
+
+    .nav-auth-status {
+        padding: 0.5rem 0.75rem;
+        text-align: left;
+        white-space: nowrap;
+    }
+
     .main-nav a:hover {
         background-color: transparent;
         color: rgba(255, 255, 255, 0.8);
@@ -183,8 +233,16 @@ import Logo from "../assets/icons/logo_P.svg";
         opacity: 0.8;
     }
 
+    .main-nav button:hover {
+        background-color: transparent;
+        color: rgba(255, 255, 255, 0.8);
+        text-decoration: none;
+        opacity: 0.8;
+    }
+
     /* 5. Style bonus pour transformer le lien "Se connecter" en bouton vert sur PC (comme sur ton ancienne nav) */
-    .main-nav .nav-btn-connect a {
+    .main-nav .nav-btn-connect a,
+    .main-nav .nav-btn-account a {
         font-weight: 700;
         background-color: var(--color-vert);
         border-radius: 9999px;
@@ -193,28 +251,101 @@ import Logo from "../assets/icons/logo_P.svg";
         color: white;
     }
     
-    .main-nav .nav-btn-connect a:hover {
+    .main-nav .nav-btn-connect a:hover,
+    .main-nav .nav-btn-account a:hover {
         background-color: white;
         color: var(--color-vert);
+        opacity: 1;
+    }
+
+    .main-nav .nav-btn-logout button {
+        font-weight: 700;
+        background-color: transparent;
+        border: 1px solid rgba(255, 255, 255, 0.65);
+        border-radius: 9999px;
+        padding: 0.5rem 1.25rem;
+        margin-left: 0.5rem;
+        color: white;
+    }
+
+    .main-nav .nav-btn-logout button:hover {
+        background-color: white;
+        color: var(--color-rouge);
         opacity: 1;
     }
 }
 </style>
 
-<script>
-    const toggle = document.querySelector<HTMLButtonElement>("#menu-btn");
-    const nav = document.querySelector<HTMLElement>("#mainNav");
+<script type="module">
+    import PocketBase from "pocketbase";
+
+    const toggle = document.getElementById("menu-btn");
+    const nav = document.getElementById("mainNav");
     const page = document.body;
     const desktopWidth = 1024;
+    const pb = new PocketBase('/pb');
+    pb.autoCancellation(false);
+
+    const navAuthStatus = document.getElementById("nav-auth-status");
+    const navAuthLabel = document.getElementById("nav-auth-label");
+    const navLoginItem = document.getElementById("nav-login-item");
+    const navAccountItem = document.getElementById("nav-account-item");
+    const navLogoutItem = document.getElementById("nav-logout-item");
+    const navLogoutButton = document.getElementById("nav-logout-button");
+
+    function getAccountLabel() {
+        const model = pb.authStore.model;
+        return model?.name || model?.username || model?.email || 'Mon compte';
+    }
+
+    function closeMenu() {
+        if (!toggle || !nav) return;
+        toggle.setAttribute("aria-expanded", "false");
+        toggle.setAttribute("aria-label", "Ouvrir le menu principal");
+        nav.setAttribute("aria-hidden", "true");
+        toggle.classList.remove("is-open");
+        page.classList.remove("noscroll");
+    }
+
+    function syncAuthNavigation() {
+        const isConnected = pb.authStore.isValid;
+
+        navAuthStatus?.toggleAttribute('hidden', !isConnected);
+        navLoginItem?.toggleAttribute('hidden', isConnected);
+        navAccountItem?.toggleAttribute('hidden', !isConnected);
+        navLogoutItem?.toggleAttribute('hidden', !isConnected);
+
+        if (navAuthLabel) {
+            navAuthLabel.textContent = isConnected ? `Connecte: ${getAccountLabel()}` : 'Non connecte';
+        }
+    }
+
+    syncAuthNavigation();
+    pb.authStore.onChange(() => {
+        syncAuthNavigation();
+    });
+
+    navLogoutButton?.addEventListener('click', () => {
+        pb.authStore.clear();
+        syncAuthNavigation();
+
+        if (window.innerWidth < desktopWidth) {
+            closeMenu();
+        }
+
+        if (window.location.pathname === '/se_connecter') {
+            window.location.reload();
+        }
+    });
 
     if (toggle && nav) {
-        const setMenuState = (open: boolean) => {
+        function setMenuState(open) {
             toggle.setAttribute("aria-expanded", String(open));
             toggle.setAttribute("aria-label", open ? "Fermer le menu principal" : "Ouvrir le menu principal");
             nav.setAttribute("aria-hidden", String(!open));
             toggle.classList.toggle("is-open", open);
             page.classList.toggle("noscroll", open && window.innerWidth < desktopWidth);
-        };
+        }
 
         toggle.addEventListener("click", () => {
             const isOpen = toggle.getAttribute("aria-expanded") === "true";
@@ -231,14 +362,14 @@ import Logo from "../assets/icons/logo_P.svg";
 
         document.addEventListener("keydown", (event) => {
             if (event.key === "Escape") {
-                setMenuState(false);
+                closeMenu();
                 toggle.focus();
             }
         });
 
         window.addEventListener("resize", () => {
             if (window.innerWidth >= desktopWidth) {
-                setMenuState(false);
+                closeMenu();
             }
         });
     }

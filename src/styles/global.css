@@ -81,6 +81,98 @@
     }
 }
 
+@layer components {
+    .theme-panel {
+        background-color: var(--color-blanc);
+        color: var(--color-noir);
+        border-radius: 1.5rem;
+        box-shadow: 0 10px 24px rgba(0, 0, 0, 0.1);
+    }
+
+    .theme-panel-soft {
+        background-color: var(--color-beige);
+        color: var(--color-noir);
+        border-radius: 1rem;
+    }
+
+    .theme-panel-contrast {
+        background-color: var(--color-gris);
+        color: var(--color-blanc);
+        border-radius: 1rem;
+    }
+
+    .theme-field {
+        background-color: var(--color-blanc);
+        border: 1px solid var(--color-beige);
+        color: var(--color-noir);
+    }
+
+    .theme-help {
+        color: var(--color-gris);
+    }
+
+    .theme-btn-primary,
+    .theme-btn-accent,
+    .theme-btn-muted {
+        color: var(--color-blanc);
+        font-weight: 700;
+        border-radius: 0.75rem;
+        transition: filter 0.2s ease;
+    }
+
+    .theme-btn-primary {
+        background-color: var(--color-bordeaux);
+    }
+
+    .theme-btn-accent {
+        background-color: var(--color-vert);
+    }
+
+    .theme-btn-muted {
+        background-color: var(--color-gris);
+    }
+
+    .theme-btn-primary:hover,
+    .theme-btn-accent:hover,
+    .theme-btn-muted:hover {
+        filter: brightness(0.95);
+    }
+
+    .theme-icon-button {
+        background-color: var(--color-rouge);
+        color: var(--color-blanc);
+        border-radius: 9999px;
+    }
+
+    .theme-badge-dark {
+        background-color: var(--color-bordeaux);
+        color: var(--color-blanc);
+        border-radius: 9999px;
+    }
+
+    .theme-tag {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.25rem;
+        background-color: var(--color-vert);
+        color: var(--color-blanc);
+        border-radius: 9999px;
+        padding: 0.125rem 0.5rem;
+        font-size: 0.75rem;
+        line-height: 1;
+    }
+
+    .theme-link-small {
+        color: var(--color-blanc);
+        text-decoration: underline;
+        font-size: 0.75rem;
+    }
+
+    .theme-text-muted-on-dark {
+        color: rgba(255, 255, 255, 0.8);
+    }
+}
+
 body.noscroll {
     overflow: hidden;
 }

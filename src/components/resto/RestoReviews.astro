@@ -9,8 +9,8 @@ const { avis, restoId } = Astro.props as Props;
 interface Review {
   id?: string;
   titre_avis?: string;
-  contenu_avis?: string;
-  note_avis?: number;
+  avis?: string;
+  note?: number;
   auteur?: string;
   created?: string;
 }
@@ -37,16 +37,18 @@ function formatDate(value?: string) {
 <section aria-labelledby="reviews-title">
   <h2 id="reviews-title" class="font-bold text-2xl mb-3">Notes et avis</h2>
 
-  <ul id="reviews-list" class="flex md:grid md:grid-cols-1 xl:grid-cols-2 gap-3 overflow-x-auto md:overflow-visible pb-2 list-none p-0 m-0" role="list">
+  <ul id="reviews-list" class="grid grid-cols-1 xl:grid-cols-2 gap-3 list-none p-0 m-0" role="list">
     {reviews.length > 0 ? reviews.map((a) => (
       <li>
-        <article class="min-w-65 md:min-w-0 bg-[#918786] text-white rounded-xl p-4 shadow-md">
+        <article class="theme-panel-contrast p-4 shadow-md">
           <h3 class="font-bold">{a.titre_avis || 'Avis client'}</h3>
-          <p class="text-sm mt-2 leading-relaxed">{a.contenu_avis || 'Aucun contenu d avis pour le moment.'}</p>
-          <p class="mt-3 text-yellow-300 text-lg" aria-label={`Note ${typeof a.note_avis === 'number' ? Math.round(a.note_avis) : 4} sur 5`}>
-            {starsFor(a.note_avis)}
+          <p class="text-sm mt-2 leading-relaxed">{a.avis || 'Aucun contenu d avis pour le moment.'}</p>
+          <p class="mt-3 text-or text-lg" aria-label={`Note ${typeof a.note === 'number' ? Math.round(a.note) : 4} sur 5`}>
+            {starsFor(a.note)}
           </p>
-          <p class="text-xs mt-2 opacity-90">{a.auteur || 'Utilisateur Onyoz'}</p>
+          {a.auteur && (
+            <p class="text-xs mt-2 opacity-90">{a.auteur}</p>
+          )}
           {a.created && (
             <p class="text-xs mt-1 opacity-90">Publié le {formatDate(a.created)}</p>
           )}
@@ -54,7 +56,7 @@ function formatDate(value?: string) {
       </li>
     )) : (
       <li id="reviews-empty-state">
-        <article class="min-w-65 md:min-w-0 bg-[#918786] text-white rounded-xl p-4 shadow-md">
+        <article class="theme-panel-contrast p-4 shadow-md">
           <h3 class="font-bold">Aucun avis pour le moment</h3>
           <p class="text-sm mt-2">Soyez la premiere personne a laisser un commentaire.</p>
         </article>
@@ -62,10 +64,10 @@ function formatDate(value?: string) {
     )}
   </ul>
 
-  <form id="review-form" class="mt-4 grid gap-3 bg-[#f4f1ec] rounded-xl p-4" aria-describedby="review-help">
+  <form id="review-form" class="theme-panel-soft mt-4 grid gap-3 p-4" aria-describedby="review-help">
     <fieldset class="grid gap-3 border-0 p-0 m-0">
       <legend class="font-bold text-base">Écrire un commentaire</legend>
-      <p id="review-help" class="text-xs text-[#5d5554]">Les champs marqués d un astérisque sont obligatoires.</p>
+      <p id="review-help" class="theme-help text-xs">Les champs marqués d un astérisque sont obligatoires.</p>
 
       <label for="review-title" class="text-sm">Titre *</label>
       <input
@@ -75,21 +77,13 @@ function formatDate(value?: string) {
         maxlength="80"
         required
         autocomplete="off"
-        class="rounded-md border border-[#cfc7be] bg-white px-3 py-2"
+        class="theme-field rounded-md px-3 py-2"
       />
 
-      <label for="review-author" class="text-sm">Votre prénom (optionnel)</label>
-      <input
-        id="review-author"
-        name="auteur"
-        type="text"
-        maxlength="50"
-        autocomplete="name"
-        class="rounded-md border border-[#cfc7be] bg-white px-3 py-2"
-      />
+      <p id="review-auth-hint" class="theme-help text-sm"></p>
 
       <label for="review-note" class="text-sm">Note *</label>
-      <select id="review-note" name="note" required class="rounded-md border border-[#cfc7be] bg-white px-3 py-2">
+      <select id="review-note" name="note" required class="theme-field rounded-md px-3 py-2">
         <option value="5">5 sur 5</option>
         <option value="4" selected>4 sur 5</option>
         <option value="3">3 sur 5</option>
@@ -105,14 +99,14 @@ function formatDate(value?: string) {
         minlength="8"
         maxlength="800"
         required
-        class="rounded-md border border-[#cfc7be] bg-white px-3 py-2"
+        class="theme-field rounded-md px-3 py-2"
       ></textarea>
     </fieldset>
 
     <button
       id="review-submit"
       type="submit"
-      class="bg-[#8bc53f] text-white font-bold px-6 py-3 rounded-md w-full hover:brightness-95 transition"
+      class="theme-btn-accent px-6 py-3 rounded-md w-full"
     >
       Envoyer le commentaire
     </button>
@@ -123,13 +117,17 @@ function formatDate(value?: string) {
 </section>
 
 <script define:vars={{ restoId }}>
-  const REVIEW_COLLECTION_URL = '/pb/api/collections/avis/records';
+  import PocketBase from 'pocketbase';
+
+  const pb = new PocketBase('/pb');
+  pb.autoCancellation(false);
 
   const form = document.getElementById('review-form');
   const statusEl = document.getElementById('review-status');
   const errorEl = document.getElementById('review-error');
   const reviewsList = document.getElementById('reviews-list');
   const submitBtn = document.getElementById('review-submit');
+  const authHintEl = document.getElementById('review-auth-hint');
 
   const toSafeText = (value, fallback = '') => {
     const text = String(value ?? '').trim();
@@ -140,6 +138,17 @@ function formatDate(value?: string) {
     const parsed = Number(value);
     if (!Number.isFinite(parsed)) return 4;
     return Math.min(5, Math.max(1, Math.round(parsed)));
+  };
+
+  const getAuthorLabel = () => {
+    const model = pb.authStore.model;
+    const name = toSafeText(model?.name);
+    if (name) return name;
+
+    const username = toSafeText(model?.username);
+    if (username) return username;
+
+    return toSafeText(model?.email, 'Utilisateur Onyoz');
   };
 
   const starsForClient = (note) => '★'.repeat(note) + '☆'.repeat(5 - note);
@@ -163,9 +172,24 @@ function formatDate(value?: string) {
     form.setAttribute('aria-busy', String(isLoading));
   };
 
+  const clearReviewsList = () => {
+    if (!reviewsList) return;
+    reviewsList.innerHTML = '';
+  };
+
+  const syncReviewFormAuth = () => {
+    const isConnected = pb.authStore.isValid;
+
+    if (authHintEl) {
+      authHintEl.textContent = isConnected
+        ? `Vous pouvez publier avec le compte ${getAuthorLabel()}.`
+        : 'Vous pouvez publier un commentaire sans compte. Si vous etes connecte, votre compte sera seulement utilise comme indication locale.';
+    }
+  };
+
   const createReviewCard = (review) => {
     const article = document.createElement('article');
-    article.className = 'min-w-65 md:min-w-0 bg-[#918786] text-white rounded-xl p-4 shadow-md';
+    article.className = 'theme-panel-contrast p-4 shadow-md';
 
     const title = document.createElement('h3');
     title.className = 'font-bold';
@@ -173,26 +197,96 @@ function formatDate(value?: string) {
 
     const content = document.createElement('p');
     content.className = 'text-sm mt-2 leading-relaxed';
-    content.textContent = toSafeText(review.contenu_avis, 'Aucun contenu d avis pour le moment.');
+    content.textContent = toSafeText(review.avis, 'Aucun contenu d avis pour le moment.');
 
-    const noteValue = toSafeNote(review.note_avis);
+    const noteValue = toSafeNote(review.note);
     const note = document.createElement('p');
-    note.className = 'mt-3 text-yellow-300 text-lg';
+    note.className = 'mt-3 text-or text-lg';
     note.setAttribute('aria-label', `Note ${noteValue} sur 5`);
     note.textContent = starsForClient(noteValue);
 
-    const author = document.createElement('p');
-    author.className = 'text-xs mt-2 opacity-90';
-    author.textContent = toSafeText(review.auteur, 'Utilisateur Onyoz');
+    article.append(title, content, note);
 
-    article.append(title, content, note, author);
+    const authorLabel = toSafeText(review.auteur);
+    if (authorLabel) {
+      const author = document.createElement('p');
+      author.className = 'text-xs mt-2 opacity-90';
+      author.textContent = authorLabel;
+      article.appendChild(author);
+    }
+
+    if (review.created) {
+      const published = document.createElement('p');
+      published.className = 'text-xs mt-1 opacity-90';
+      published.textContent = `Publié le ${new Intl.DateTimeFormat('fr-FR', {
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric',
+      }).format(new Date(review.created))}`;
+      article.appendChild(published);
+    }
 
     const item = document.createElement('li');
     item.appendChild(article);
     return item;
   };
 
+  const createEmptyStateCard = () => {
+    const item = document.createElement('li');
+    item.id = 'reviews-empty-state';
+
+    const article = document.createElement('article');
+    article.className = 'theme-panel-contrast p-4 shadow-md';
+
+    const title = document.createElement('h3');
+    title.className = 'font-bold';
+    title.textContent = 'Aucun avis pour le moment';
+
+    const text = document.createElement('p');
+    text.className = 'text-sm mt-2';
+    text.textContent = 'Soyez la premiere personne a laisser un commentaire.';
+
+    article.append(title, text);
+    item.appendChild(article);
+    return item;
+  };
+
+  const renderReviews = (reviews) => {
+    if (!reviewsList) return;
+
+    clearReviewsList();
+
+    if (!Array.isArray(reviews) || reviews.length === 0) {
+      reviewsList.appendChild(createEmptyStateCard());
+      return;
+    }
+
+    reviews.forEach((review) => {
+      reviewsList.appendChild(createReviewCard(review));
+    });
+  };
+
+  const loadLatestReviews = async () => {
+    if (!restoId || !reviewsList) return;
+
+    const latestReviews = await pb.collection('avis').getFullList({
+      filter: `restaurants_avis = "${restoId}"`,
+      sort: '-created',
+    });
+
+    renderReviews(latestReviews);
+  };
+
   if (form && statusEl && errorEl && reviewsList) {
+    syncReviewFormAuth();
+    pb.authStore.onChange(() => {
+      syncReviewFormAuth();
+    });
+
+    loadLatestReviews().catch((error) => {
+      console.error('Erreur lors du chargement des avis :', error);
+    });
+
     form.addEventListener('submit', async (event) => {
       event.preventDefault();
 
@@ -208,15 +302,13 @@ function formatDate(value?: string) {
 
       const formData = new FormData(form);
       const titre = toSafeText(formData.get('titre'));
-      const auteur = toSafeText(formData.get('auteur'));
       const contenu = toSafeText(formData.get('contenu'));
       const note = toSafeNote(formData.get('note'));
 
       const payload = {
         titre_avis: titre,
-        contenu_avis: contenu,
-        note_avis: note,
-        auteur: auteur || 'Utilisateur Onyoz',
+        avis: contenu,
+        note,
         restaurants_avis: restoId,
       };
 
@@ -224,23 +316,11 @@ function formatDate(value?: string) {
         setLoading(true);
         setStatus('Envoi en cours...');
 
-        const response = await fetch(REVIEW_COLLECTION_URL, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload),
-        });
+        await pb.collection('avis').create(payload);
 
-        if (!response.ok) {
-          throw new Error(`Erreur HTTP ${response.status}`);
-        }
+        const authorLabel = pb.authStore.isValid ? getAuthorLabel() : '';
 
-        const created = await response.json();
-        const emptyState = document.getElementById('reviews-empty-state');
-        if (emptyState) {
-          emptyState.remove();
-        }
-
-        reviewsList.prepend(createReviewCard(created));
+        await loadLatestReviews();
         form.reset();
 
         const noteField = form.querySelector('select[name="note"]');
@@ -248,7 +328,11 @@ function formatDate(value?: string) {
           noteField.value = '4';
         }
 
-        setStatus('Commentaire envoye avec succes.');
+        setStatus(
+          authorLabel
+            ? `Commentaire envoye avec succes sur PocketBase depuis le compte ${authorLabel}.`
+            : 'Commentaire envoye avec succes sur PocketBase.'
+        );
       } catch (error) {
         console.error('Erreur lors de l envoi du commentaire :', error);
         setError('Erreur lors de l envoi. Reessayez dans un instant.');
