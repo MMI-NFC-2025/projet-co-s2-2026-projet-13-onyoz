@@ -1,7 +1,7 @@
 ---
 import { getRestaurantById, getRestaurantsFavoris } from '../../backend.mjs';
 
-const BASE = 'http://pbonyoz.lucie-garcia.fr/api/files/pbc_1567773776';
+const BASE = '/pb/api/files/pbc_1567773776';
 
 const favorisIds = await getRestaurantsFavoris();
 const ids = favorisIds.filter(r => r.favoris).map(r => r.id);
@@ -101,7 +101,7 @@ const favoris = await Promise.all(ids.map(id => getRestaurantById(id)));
 </section>
 
 <script>
-  const BASE_URL = 'http://pbonyoz.lucie-garcia.fr/api/collections/pbc_1567773776/records';
+  const BASE_URL = '/pb/api/collections/pbc_1567773776/records';
 
   // 1. Écouter les changements en provenance du composant Filtres
   window.addEventListener('favori-changed', (e: any) => {

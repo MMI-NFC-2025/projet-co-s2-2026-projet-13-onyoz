@@ -1,7 +1,7 @@
 ---
 const { resto } = Astro.props;
 
-const FILE_BASE = "http://pbonyoz.lucie-garcia.fr/api/files/pbc_1567773776";
+const FILE_BASE = "/pb/api/files/pbc_1567773776";
 const gallery = Array.isArray(resto?.images) ? resto.images.filter(Boolean).slice(0, 2) : [];
 const menuLink = resto?.site_web || `https://www.google.com/search?q=${encodeURIComponent(`${resto.nom_restaurants} Montbeliard`)}`;
 ---

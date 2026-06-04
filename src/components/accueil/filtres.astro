@@ -1,7 +1,7 @@
 ---
 import { getRestaurantsPrixCroissant } from '../../backend.mjs';
 
-const BASE = 'http://pbonyoz.lucie-garcia.fr/api/files/pbc_1567773776';
+const BASE = '/pb/api/files/pbc_1567773776';
 const restaurants = await getRestaurantsPrixCroissant();
 ---
 
@@ -169,7 +169,7 @@ const restaurants = await getRestaurantsPrixCroissant();
 </section>
 
 <script>
-  const BASE_URL = 'http://pbonyoz.lucie-garcia.fr/api/collections/pbc_1567773776/records';
+  const BASE_URL = '/pb/api/collections/pbc_1567773776/records';
 
   // --- GESTION DES DROPDOWNS ---
   const resultAnnouncement = document.getElementById('resultat-annonce');
