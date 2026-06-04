@@ -277,26 +277,10 @@ import Logo from "../assets/icons/logo_P.svg";
 </style>
 
 <script type="module">
-    import PocketBase from "pocketbase";
-
     const toggle = document.getElementById("menu-btn");
     const nav = document.getElementById("mainNav");
     const page = document.body;
     const desktopWidth = 1024;
-    const pb = new PocketBase('/pb');
-    pb.autoCancellation(false);
-
-    const navAuthStatus = document.getElementById("nav-auth-status");
-    const navAuthLabel = document.getElementById("nav-auth-label");
-    const navLoginItem = document.getElementById("nav-login-item");
-    const navAccountItem = document.getElementById("nav-account-item");
-    const navLogoutItem = document.getElementById("nav-logout-item");
-    const navLogoutButton = document.getElementById("nav-logout-button");
-
-    function getAccountLabel() {
-        const model = pb.authStore.model;
-        return model?.name || model?.username || model?.email || 'Mon compte';
-    }
 
     function closeMenu() {
         if (!toggle || !nav) return;
@@ -306,37 +290,6 @@ import Logo from "../assets/icons/logo_P.svg";
         toggle.classList.remove("is-open");
         page.classList.remove("noscroll");
     }
-
-    function syncAuthNavigation() {
-        const isConnected = pb.authStore.isValid;
-
-        navAuthStatus?.toggleAttribute('hidden', !isConnected);
-        navLoginItem?.toggleAttribute('hidden', isConnected);
-        navAccountItem?.toggleAttribute('hidden', !isConnected);
-        navLogoutItem?.toggleAttribute('hidden', !isConnected);
-
-        if (navAuthLabel) {
-            navAuthLabel.textContent = isConnected ? `Connecte: ${getAccountLabel()}` : 'Non connecte';
-        }
-    }
-
-    syncAuthNavigation();
-    pb.authStore.onChange(() => {
-        syncAuthNavigation();
-    });
-
-    navLogoutButton?.addEventListener('click', () => {
-        pb.authStore.clear();
-        syncAuthNavigation();
-
-        if (window.innerWidth < desktopWidth) {
-            closeMenu();
-        }
-
-        if (window.location.pathname === '/se_connecter') {
-            window.location.reload();
-        }
-    });
 
     if (toggle && nav) {
         function setMenuState(open) {
@@ -373,4 +326,59 @@ import Logo from "../assets/icons/logo_P.svg";
             }
         });
     }
+
+    async function initAuthNavigation() {
+        const navAuthStatus = document.getElementById("nav-auth-status");
+        const navAuthLabel = document.getElementById("nav-auth-label");
+        const navLoginItem = document.getElementById("nav-login-item");
+        const navAccountItem = document.getElementById("nav-account-item");
+        const navLogoutItem = document.getElementById("nav-logout-item");
+        const navLogoutButton = document.getElementById("nav-logout-button");
+
+        try {
+            const { default: PocketBase } = await import("pocketbase");
+            const pb = new PocketBase("/pb");
+            pb.autoCancellation(false);
+
+            function getAccountLabel() {
+                const model = pb.authStore.model;
+                return model?.name || model?.username || model?.email || "Mon compte";
+            }
+
+            function syncAuthNavigation() {
+                const isConnected = pb.authStore.isValid;
+                navAuthStatus?.toggleAttribute("hidden", !isConnected);
+                navLoginItem?.toggleAttribute("hidden", isConnected);
+                navAccountItem?.toggleAttribute("hidden", !isConnected);
+                navLogoutItem?.toggleAttribute("hidden", !isConnected);
+
+                if (navAuthLabel) {
+                    navAuthLabel.textContent = isConnected ? `Connecte: ${getAccountLabel()}` : "Non connecte";
+                }
+            }
+
+            syncAuthNavigation();
+            pb.authStore.onChange(() => {
+                syncAuthNavigation();
+            });
+
+            navLogoutButton?.addEventListener("click", () => {
+                pb.authStore.clear();
+                syncAuthNavigation();
+
+                if (window.innerWidth < desktopWidth) {
+                    closeMenu();
+                }
+
+                if (window.location.pathname === "/se_connecter") {
+                    window.location.reload();
+                }
+            });
+        } catch (error) {
+            // L'auth ne doit jamais bloquer le fonctionnement du menu principal.
+            console.error("Navigation auth indisponible", error);
+        }
+    }
+
+    initAuthNavigation();
 </script>
