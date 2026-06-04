@@ -4,8 +4,10 @@
 Éléménts à renseigner pour la soutenance :
 
 - [ ] Nom du projet : Onyoz
-- [ ] URL de la landing page :
-- [ ] URL de l'application finale :
+- [ ] URL de la landing page : https://landingonyoz.badarous.fr/
+
+- [ ] URL de l'application finale : https://onyoz.badarous.fr/
+
 - [ ] URL de connexion au back office : pbonyoz.lucie-garcia.fr/_/
 - [ ] Identifiant de connexion au backoffice : louise.langenfeld@edu.univ-fcomte.fr
 - [ ] Mot de passe de connexion au backoffice : Kirr@L0n!!
