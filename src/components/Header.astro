@@ -1,0 +1,169 @@
+---
+import "../styles/global.css";
+import Logo from "../assets/icons/logo_header.svg";
+---
+
+<header class="site-header">
+    <div class="header-inner">
+        <a href="/" class="header-logo">
+            <Logo />
+        </a>
+
+        <button class="menu-btn" id="menu-btn" aria-label="menu" aria-expanded="false" aria-controls="mainNav">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+
+        <nav class="mobile-nav" id="mainNav" aria-hidden="true">
+            <ul>
+                <li><a href="/accueil">Accueil</a></li>
+                <li><a href="/a_propos">À propos d'Onyoz</a></li>
+                <li><a href="/contact">Contact</a></li>
+            </ul>
+        </nav>
+
+        <nav class="desktop-nav">
+            <a href="/contact">Contact</a>
+            <a href="/a_propos">À propos</a>
+            <a href="http://onyoz.badarous.fr/" class="btn-decouvrir">Découvrir</a>
+        </nav>
+    </div>
+</header>
+
+<style>
+.site-header {
+    background-color: var(--color-rouge);
+    position: sticky;
+    top: 0;
+    z-index: 50;
+}
+
+.header-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 1.25rem;
+}
+
+.header-logo {
+    padding: 0.5rem;
+}
+
+/* Bouton hamburger */
+.menu-btn {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 3rem;
+    height: 2.25rem;
+    padding: 0.2rem 0;
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+.menu-btn span {
+    display: block;
+    height: 6px;
+    width: 100%;
+    background-color: white;
+    border-radius: 9999px;
+    transition: all 0.3s ease;
+}
+
+.menu-btn.is-open span:nth-child(1) { transform: translateY(14.8px) rotate(45deg); }
+.menu-btn.is-open span:nth-child(2) { opacity: 0; }
+.menu-btn.is-open span:nth-child(3) { transform: translateY(-14.8px) rotate(-45deg); }
+
+/* Navigation mobile */
+.mobile-nav {
+    position: fixed;
+    inset: 0;
+    z-index: 40;
+    background-color: var(--color-rouge);
+    padding: 6rem 2.5rem 2.5rem;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.mobile-nav[aria-hidden="true"] {
+    opacity: 0;
+    visibility: hidden;
+}
+
+.mobile-nav ul {
+    list-style: none;
+    padding: 0;
+    margin: 2rem 0 0;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.mobile-nav a {
+    display: block;
+    color: white;
+    text-decoration: none;
+    font-family: var(--font-poppins);
+    font-size: 1.5rem;
+    text-align: center;
+    border: 2px solid white;
+    border-radius: 9999px;
+    padding: 0.625rem 2rem;
+}
+
+/* Navigation desktop */
+.desktop-nav {
+    display: none;
+}
+
+@media (min-width: 1024px) {
+    .menu-btn { display: none; }
+    .mobile-nav { display: none; }
+
+    .desktop-nav {
+        display: flex;
+        align-items: center;
+        gap: 0.25rem;
+        margin-right: 1rem;
+    }
+
+    .desktop-nav a {
+        color: white;
+        text-decoration: none;
+        font-family: var(--font-poppins);
+        font-weight: 300;
+        padding: 0.5rem 0.75rem;
+    }
+
+    .desktop-nav a:hover { opacity: 0.8; }
+
+    .desktop-nav .btn-decouvrir {
+        font-weight: 700;
+        background-color: var(--color-vert);
+        border-radius: 9999px;
+        padding: 0.5rem 1.5rem;
+        margin-left: 0.5rem;
+    }
+
+    .header-inner {
+        margin: 0 2.5rem;
+    }
+}
+</style>
+
+<script>
+    const toggle = document.querySelector("#menu-btn");
+    const nav = document.querySelector("#mainNav");
+    const page = document.body;
+
+    if (toggle && nav) {
+        toggle.addEventListener("click", () => {
+            const isOpen = toggle.ariaExpanded === "true";
+            toggle.ariaExpanded = String(!isOpen);
+            nav.ariaHidden = String(isOpen);
+            toggle.classList.toggle("is-open", !isOpen);
+            page.classList.toggle("noscroll", !isOpen);
+        });
+    }
+</script>

@@ -1,0 +1,37 @@
+---
+import LogoTxt from "../../assets/icons/logo_noir.svg";
+import group21 from "../../assets/landing_page/group21.avif";
+import grosOignon from "../../assets/gors nonion(1).svg";
+import ellipse17 from "../../assets/Group 22(1).svg";
+
+---
+
+<section class="qso-section">
+    <img src={grosOignon.src} aria-hidden="true" class="deco-gauche" />
+    <img src={ellipse17.src} aria-hidden="true" class="deco-droite" />
+
+    <div class="qso-inner">
+        <h2 class="qso-titre">
+            Qu'est-ce que c'est <LogoTxt class="logo-inline" /> ?
+        </h2>
+
+        <!-- Desktop : image -->
+        <div class="qso-desktop">
+            <img src={group21.src} alt="Map interactive, offres étudiantes et filtres" />
+        </div>
+
+        <!-- Mobile : 3 cartes -->
+        <div class="qso-mobile">
+            <div class="carte carte-gauche">
+                <p><strong>Offres étudiantes</strong><br />et<br /><strong>bons plans</strong><br />mis en avant !</p>
+            </div>
+            <div class="carte carte-centre">
+                <h3>Map interactive</h3>
+                <p>pour trouver les établissements à proximité !</p>
+            </div>
+            <div class="carte carte-droite">
+                <p>De<br /><strong>nombreux filtres</strong><br />pour trouver ce qu'il vous faut !</p>
+            </div>
+        </div>
+    </div>
+</section>

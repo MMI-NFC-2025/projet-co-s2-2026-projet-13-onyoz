@@ -1,0 +1,79 @@
+---
+import logoFooter from "../assets/icons/logoblanc_oignon.svg";
+import logoInstagram from "../assets/icons/logo-Instagram.svg";
+import logoFacebook from "../assets/icons/facebook.svg";
+import logoTiktok from "../assets/icons/logo TikTok.svg";
+import logoYoutube from "../assets/icons/logo-Youtube.svg";
+---
+
+<footer class="site-footer">
+    <img src={logoFooter.src} alt="Onyoz" class="footer-logo" />
+
+    <p class="footer-titre">INFOS</p>
+    <ul class="footer-liens">
+        <li><a href="">Mentions Légales</a></li>
+        <li><a href="">Conditions D'utilisation</a></li>
+        <li><a href="/contact">Contact</a></li>
+        <li><a href="/a_propos">À Propos</a></li>
+    </ul>
+
+    <p class="footer-titre">SUIVEZ-NOUS</p>
+    <div class="footer-social">
+        <a href="#"><img src={logoInstagram.src} alt="Instagram" /></a>
+        <a href="#"><img src={logoFacebook.src} alt="Facebook" /></a>
+        <a href="#"><img src={logoTiktok.src} alt="TikTok" /></a>
+        <a href="#"><img src={logoYoutube.src} alt="YouTube" /></a>
+    </div>
+
+    <p class="footer-disclaimer">
+        Ce site a été réalisé dans le cadre d'un projet universitaire, il est donc
+        fictif. Ne prenez pas les informations de ce site pour vraie.
+    </p>
+</footer>
+
+<style>
+.site-footer {
+    background-color: var(--color-rouge);
+    color: var(--color-blanc);
+    padding: 2.5rem 2rem;
+}
+
+.footer-logo {
+    height: 4rem;
+    margin-bottom: 2rem;
+}
+
+.footer-titre {
+    font-weight: 700;
+    margin-bottom: 0.75rem;
+}
+
+.footer-liens {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.footer-liens a {
+    color: var(--color-blanc);
+    text-decoration: none;
+}
+
+.footer-social {
+    display: flex;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.footer-social img {
+    height: 2rem;
+}
+
+.footer-disclaimer {
+    font-size: 0.75rem;
+    text-align: center;
+}
+</style>

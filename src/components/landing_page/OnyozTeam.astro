@@ -1,0 +1,24 @@
+---
+import emma from "../../assets/landing_page/emma1.avif";
+import louise from "../../assets/landing_page/louise1.avif";
+import lucie from "../../assets/landing_page/lucie1.avif";
+const membres = [
+    { name: "Lucie", photo: lucie },
+    { name: "Louise", photo: louise },
+    { name: "Emma", photo: emma },
+];
+---
+
+<section class="team-section">
+    <h2>La Onyoz' team</h2>
+    <div class="team-grille">
+        {membres.map(({ name, photo }) => (
+            <div class="team-membre">
+                <div class="team-photo">
+                    <img class="team-photo-image" src={photo.src} alt={`Photo de ${name}`} loading="lazy" />
+                </div>
+                <span>{name}</span>
+            </div>
+        ))}
+    </div>
+</section>

@@ -1,0 +1,74 @@
+---
+import ellipse from "../../assets/Group 22(1).svg";
+---
+
+<section class="contenu-section">
+    <div class="contenu-texte">
+        <div>
+            <h2>Onyoz</h2>
+            <p>
+                Onyoz est un projet étudiant du BUT MMI de Montbéliard. À travers cette application vous
+                pourrez voir tous les restaurants Montbéliardaï qui proposent un prix adapté aux étudiants,
+                leurs localisations, leurs prix et leurs horaires. Cette application web a pour consigne de
+                choisir un support entre mobile, tablette ou bureau, ici il a été choisi de prendre le mobile
+                comme support, puisqu'il est plus aisé de regarder les restaurants proches de soi via un mobile.
+            </p>
+        </div>
+        <div>
+            <h2>Nous</h2>
+            <p>
+                Nous sommes une équipe composée de trois élèves. Nos noms? Emma Badarous, Lucie Garcia
+                et Louise Langenfeld. Nous étudions au BUT MMI de Montbéliard. Ce projet provient d'un besoin
+                que nous avons en commun: la difficulté à se restaurer en temps qu'étudiant. Bien que des
+                structures dédiées soient mises en place, nous trouvons que la variété doit être admise dans nos
+                choix et ceux en suivant le cours de la précarité étudiante.
+            </p>
+        </div>
+    </div>
+    <img src={ellipse.src} aria-hidden="true" class="deco" />
+</section>
+
+<style>
+.contenu-section {
+    position: relative;
+    background-color: var(--color-beige);
+    padding: 2.5rem 1.5rem 6rem;
+    overflow: hidden;
+}
+
+.contenu-texte {
+    position: relative;
+    z-index: 10;
+    max-width: 48rem;
+    display: flex;
+    flex-direction: column;
+    gap: 3rem;
+}
+
+h2 {
+    font-family: var(--font-kodchasan);
+    font-size: 2.25rem;
+    color: var(--color-noir);
+    margin-bottom: 1rem;
+}
+
+p {
+    font-family: var(--font-poppins);
+    font-size: 1rem;
+    line-height: 1.75;
+    color: var(--color-noir);
+}
+
+.deco {
+    position: absolute;
+    bottom: -4rem;
+    right: -4rem;
+    width: 20rem;
+    opacity: 0.4;
+    pointer-events: none;
+}
+
+@media (min-width: 768px) {
+    .contenu-texte { margin-left: 6rem; }
+}
+</style>
